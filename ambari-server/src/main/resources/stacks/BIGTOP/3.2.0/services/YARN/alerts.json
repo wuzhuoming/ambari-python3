@@ -449,7 +449,7 @@
       {
         "name": "ats_hbase",
         "label": "ATSv2 HBase Application",
-        "description": "This alert is triggered if the ats hbase cannot be determi"path": "BIGTOP/3.2.0/services/YARN/package/alerts/alert_nodemanagers_summary.py",ned to be up and responding to requests.",
+        "description": "This alert is triggered if the ats hbase cannot be determined to be up and responding to requests.",
         "interval": 5,
         "scope": "ANY",
         "enabled": true,
