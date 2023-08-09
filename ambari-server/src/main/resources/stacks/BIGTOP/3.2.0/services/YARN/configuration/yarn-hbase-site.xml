@@ -509,6 +509,11 @@
     <on-ambari-upgrade add="false"/>
   </property>
   <property>
+    <name>hbase.table.sanity.checks</name>
+    <value>false</value>
+    <on-ambari-upgrade add="false"/>
+  </property>
+  <property>
     <name>hbase.bucketcache.percentage.in.combinedcache</name>
     <value/>
     <description>Value to be set between 0.0 and 1.0</description>
