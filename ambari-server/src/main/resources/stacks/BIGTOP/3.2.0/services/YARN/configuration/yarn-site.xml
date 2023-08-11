@@ -120,7 +120,7 @@
   </property>
   <property>
     <name>yarn.admin.acl</name>
-    <value>yarn</value>
+    <value>yarn,yarn-ats</value>
     <description> ACL of who can be admin of the YARN cluster. </description>
     <value-attributes>
       <empty-value-valid>true</empty-value-valid>
@@ -1494,7 +1494,7 @@ yarn.node-labels.manager-class
   </property>
   <property>
     <name>yarn.service.framework.path</name>
-    <value>/hdp/apps/${hdp.version}/yarn/service-dep.tar.gz</value>
+    <value>/bigtop/apps/3.2.0/yarn/service-dep.tar.gz</value>
     <description>
       YARN Service AM dependency tarball location. Enables faster app submission.
     </description>

@@ -72,7 +72,7 @@
 
         <component>
           <name>APP_TIMELINE_SERVER</name>
-          <displayName>Timeline Service V1.5</displayName>
+          <displayName>Timeline Service V2</displayName>
           <category>MASTER</category>
           <cardinality>1</cardinality>
           <versionAdvertised>true</versionAdvertised>
