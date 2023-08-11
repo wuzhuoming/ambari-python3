@@ -1567,7 +1567,7 @@ Em.I18n.translations = {
   "admin.stackVersions.hosts.popup.header.installed": "已安装",
   "admin.stackVersions.hosts.popup.header.not_installed": "未安装",
   "admin.stackVersions.hosts.popup.header": "版本状态：{0}",
-  "admin.stackVersions.hosts.popup.title": "{0}版本{{2}主机上{1}：",
+  "admin.stackVersions.hosts.popup.title": "{0}版本{2}主机上{1}：",
   "admin.stackVersions.hosts.popup.current.title": "{0}应用于{1}主机：",
   "admin.stackVersions.hosts.popup.primary": "跳转到主机",
   "admin.stackVersions.details.install.hosts.popup.title": "安装{0}版本",
