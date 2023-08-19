@@ -29,7 +29,7 @@ import random
 from resource_management.core import shell
 from resource_management.core.exceptions import Fail
 from ambari_commons.unicode_tolerant_fs import unicode_walk
-from ambari_commons import subprocess32
+import subprocess
 
 from resource_management.core.utils import attr_to_bitmask
 
@@ -173,7 +173,7 @@ if os.geteuid() == 0:
     class Stat:
       def __init__(self, path):
         stat_val = os.stat(path)
-        self.st_uid, self.st_gid, self.st_mode = stat_val.st_uid, stat_val.st_gid, stat_val.st_mode & 07777
+        self.st_uid, self.st_gid, self.st_mode = stat_val.st_uid, stat_val.st_gid, stat_val.st_mode & 0o7777
     return Stat(path)
 
   def kill(pid, signal):
@@ -277,7 +277,7 @@ else:
     class Stat:
       def __init__(self, path):
         cmd = ["stat", "-c", "%u %g %a", path]
-        code, out, err = shell.checked_call(cmd, sudo=True, stderr=subprocess32.PIPE)
+        code, out, err = shell.checked_call(cmd, sudo=True, stderr=subprocess.PIPE)
         values = out.split(' ')
         if len(values) != 3:
           raise Fail("Execution of '{0}' returned unexpected output. {2}\n{3}".format(cmd, code, err, out))
@@ -306,7 +306,7 @@ else:
     if not path_isdir(path):
       raise Fail("{0} is not a directory. Cannot list files of it.".format(path))
 
-    code, out, err = shell.checked_call(["ls", path], sudo=True, stderr=subprocess32.PIPE)
+    code, out, err = shell.checked_call(["ls", path], sudo=True, stderr=subprocess.PIPE)
     files = out.splitlines()
     return files
 
@@ -316,7 +316,7 @@ else:
     if recursion_follow_links:
       find_flags.append('-L')
 
-    for key, flags in recursive_mode_flags.iteritems():
+    for key, flags in recursive_mode_flags.items():
       shell.checked_call(["find"] + find_flags + [path, "-type", key, "-exec" , "chmod", flags ,"{}" ,";"])
 
 def _create_file(filename, content, encoding, sudo, on_file_created=None):
@@ -331,7 +331,7 @@ def _create_file(filename, content, encoding, sudo, on_file_created=None):
 
     tmpf_name = tempfile.gettempdir() + os.sep + tempfile.template + str(time.time()) + "_" + str(random.randint(0, 1000))
     with open(tmpf_name, "wb") as fp:
-      fp.write(content)
+      fp.write(content.encode())
     if on_file_created:
       on_file_created(tmpf_name)
     shell.checked_call(["mv", "-f", tmpf_name, filename], sudo=sudo)

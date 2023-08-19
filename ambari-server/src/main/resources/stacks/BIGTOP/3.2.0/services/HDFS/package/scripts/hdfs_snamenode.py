@@ -17,7 +17,7 @@ limitations under the License.
 
 """
 
-from utils import service
+from scripts.utils import service
 from resource_management.core.resources.system import Directory, File
 from resource_management.core.source import Template
 from resource_management.libraries.functions.check_process_status import check_process_status
@@ -27,12 +27,12 @@ from ambari_commons import OSConst
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def snamenode(action=None, format=False):
   if action == "configure":
-    import params
+    from scripts import params
     for fs_checkpoint_dir in params.fs_checkpoint_dirs:
       Directory(fs_checkpoint_dir,
                 create_parents = True,
                 cd_access="a",
-                mode=0755,
+                mode=0o755,
                 owner=params.hdfs_user,
                 group=params.user_group)
     File(params.exclude_file_path,
@@ -46,7 +46,7 @@ def snamenode(action=None, format=False):
          group=params.user_group)
       pass
   elif action == "start" or action == "stop":
-    import params
+    from scripts import params
     service(
       action=action,
       name="secondarynamenode",
@@ -55,7 +55,7 @@ def snamenode(action=None, format=False):
       create_log_dir=True
     )
   elif action == "status":
-    import status_params
+    from scripts import status_params
     check_process_status(status_params.snamenode_pid_file)
 
 
@@ -64,9 +64,9 @@ def snamenode(action=None, format=False):
   if action == "configure":
     pass
   elif action == "start" or action == "stop":
-    import params
+    from scripts import params
     Service(params.snamenode_win_service_name, action=action)
   elif action == "status":
-    import status_params
+    from scripts import status_params
     check_windows_service_status(status_params.snamenode_win_service_name)
 

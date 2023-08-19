@@ -28,9 +28,9 @@ from resource_management.core.exceptions import Fail
 from resource_management.libraries.functions.format import format
 from resource_management.libraries.functions import get_unique_id_and_date
 from resource_management.libraries.functions import Direction, SafeMode
-from utils import get_dfsadmin_base_command
+from scripts.utils import get_dfsadmin_base_command
 
-from namenode_ha_state import NamenodeHAState
+from scripts.namenode_ha_state import NamenodeHAState
 
 
 safemode_to_instruction = {SafeMode.ON: "enter",
@@ -43,7 +43,7 @@ def prepare_upgrade_check_for_previous_dir():
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires backing up some data.
   Check that there is no "previous" folder inside the NameNode Name Dir.
   """
-  import params
+  from scripts import params
 
   if params.dfs_ha_enabled:
     namenode_ha = NamenodeHAState()
@@ -72,7 +72,7 @@ def prepare_upgrade_enter_safe_mode(hdfs_binary):
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires first entering Safemode.
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  import params
+  from scripts import params
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
   safe_mode_enter_cmd = dfsadmin_base_command + " -safemode enter"
@@ -83,7 +83,7 @@ def prepare_upgrade_enter_safe_mode(hdfs_binary):
     Logger.info("Transition successful: {0}, original state: {1}".format(str(safemode_transition_successful), str(original_state)))
     if not safemode_transition_successful:
       raise Fail("Could not transition to safemode state %s. Please check logs to make sure namenode is up." % str(desired_state))
-  except Exception, e:
+  except Exception as e:
     message = "Could not enter safemode. Error: {0}. As the HDFS user, call this command: {1}".format(str(e), safe_mode_enter_cmd)
     Logger.error(message)
     raise Fail(message)
@@ -93,14 +93,14 @@ def prepare_upgrade_save_namespace(hdfs_binary):
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires saving the namespace.
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  import params
+  from scripts import params
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
   save_namespace_cmd = dfsadmin_base_command + " -saveNamespace"
   try:
     Logger.info("Checkpoint the current namespace.")
     as_user(save_namespace_cmd, params.hdfs_user, env={'PATH': params.hadoop_bin_dir})
-  except Exception, e:
+  except Exception as e:
     message = format("Could not save the NameSpace. As the HDFS user, call this command: {save_namespace_cmd}")
     Logger.error(message)
     raise Fail(message)
@@ -109,7 +109,7 @@ def prepare_upgrade_backup_namenode_dir():
   """
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires backing up the NameNode Name Dirs.
   """
-  import params
+  from scripts import params
 
   i = 0
   failed_paths = []
@@ -130,7 +130,7 @@ def prepare_upgrade_backup_namenode_dir():
         Execute(('cp', '-ar', namenode_current_image, backup_current_folder),
                 sudo=True
         )
-      except Exception, e:
+      except Exception as e:
         failed_paths.append(namenode_current_image)
   if len(failed_paths) > 0:
     Logger.error("Could not backup the NameNode Name Dir(s) to {0}, make sure that the destination path is "
@@ -142,7 +142,7 @@ def prepare_upgrade_finalize_previous_upgrades(hdfs_binary):
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires Finalizing any upgrades that are in progress.
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  import params
+  from scripts import params
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
   finalize_command = dfsadmin_base_command + " -rollingUpgrade finalize"
@@ -156,7 +156,7 @@ def prepare_upgrade_finalize_previous_upgrades(hdfs_binary):
         Logger.warning('Finalize command did not contain substring: %s' % expected_substring)
     else:
       Logger.warning("Finalize command did not return any output.")
-  except Exception, e:
+  except Exception as e:
     Logger.warning("Ensure no upgrades are in progress.")
 
 def reach_safemode_state(user, safemode_state, in_ha, hdfs_binary):
@@ -170,7 +170,7 @@ def reach_safemode_state(user, safemode_state, in_ha, hdfs_binary):
   success will be True
   """
   Logger.info("Prepare to transition into safemode state %s" % safemode_state)
-  import params
+  from scripts import params
   original_state = SafeMode.UNKNOWN
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
@@ -218,7 +218,7 @@ def prepare_rolling_upgrade(hdfs_binary):
   3. Execute a rolling upgrade "query"
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  import params
+  from scripts import params
 
   if not params.upgrade_direction or params.upgrade_direction not in [Direction.UPGRADE, Direction.DOWNGRADE]:
     raise Fail("Could not retrieve upgrade direction: %s" % str(params.upgrade_direction))
@@ -253,7 +253,7 @@ def finalize_upgrade(upgrade_type, hdfs_binary):
   :param hdfs_binary: name/path of the HDFS binary to use
   """
   Logger.info("Executing Rolling Upgrade finalize")
-  import params
+  from scripts import params
 
   if params.security_enabled:
     kinit_command = format("{params.kinit_path_local} -kt {params.hdfs_user_keytab} {params.hdfs_principal_name}") 

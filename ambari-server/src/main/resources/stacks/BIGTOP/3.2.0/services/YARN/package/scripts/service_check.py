@@ -22,7 +22,7 @@ Ambari Agent
 import sys
 import ambari_simplejson as json # simplejson is much faster comparing to Python 2.6 json module and has the same functions set.
 import re
-from ambari_commons import subprocess32
+import subprocess
 from ambari_commons import os_utils
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
@@ -47,7 +47,7 @@ class ServiceCheck(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class ServiceCheckWindows(ServiceCheck):
   def service_check(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     yarn_exe = os_utils.quote_path(os.path.join(params.yarn_home, "bin", "yarn.cmd"))
@@ -89,7 +89,7 @@ class ServiceCheckWindows(ServiceCheck):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class ServiceCheckDefault(ServiceCheck):
   def service_check(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     params.HdfsResource(format("/user/{smokeuser}"),
@@ -156,7 +156,7 @@ class ServiceCheckDefault(ServiceCheck):
     #  raise Fail("Application " + app_url + " state/status is not valid. Should be FINISHED/SUCCEEDED.")
 
   def get_active_rm_webapp_address(self):
-    import params
+    from scripts import params
     active_rm_webapp_address = None
     rm_webapp_addresses = params.rm_webapp_addresses_list
     if rm_webapp_addresses is not None and len(rm_webapp_addresses) > 0:

@@ -38,7 +38,7 @@ class MapReduce2ServiceCheck(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class MapReduce2ServiceCheckWindows(MapReduce2ServiceCheck):
   def service_check(self, env):
-    import params
+    from scripts import params
 
     env.set_params(params)
 
@@ -115,7 +115,7 @@ class MapReduce2ServiceCheckWindows(MapReduce2ServiceCheck):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class MapReduce2ServiceCheckDefault(MapReduce2ServiceCheck):
   def service_check(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     jar_path = format("{hadoop_mapred_home}/{hadoopMapredExamplesJarName}")

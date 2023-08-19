@@ -30,8 +30,8 @@ from resource_management.core.logger import Logger
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def service(componentName, action='start', serviceName='yarn'):
-  import status_params
-  if status_params.service_map.has_key(componentName):
+  from scripts import status_params
+  if componentName in status_params.service_map:
     service_name = status_params.service_map[componentName]
     if action == 'start' or action == 'stop':
       Service(service_name, action=action)
@@ -41,7 +41,7 @@ def service(componentName, action='start', serviceName='yarn'):
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def service(componentName, action='start', serviceName='yarn'):
-  import params
+  from scripts import params
 
   if serviceName == 'mapreduce' and componentName == 'historyserver':
     if not params.hdfs_tmp_dir or params.hdfs_tmp_dir == None or params.hdfs_tmp_dir.lower() == 'null':

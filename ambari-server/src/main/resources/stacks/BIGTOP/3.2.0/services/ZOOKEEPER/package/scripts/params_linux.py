@@ -18,7 +18,7 @@ limitations under the License.
 Ambari Agent
 
 """
-import status_params
+from scripts import status_params
 import os
 
 from resource_management.libraries.functions import format

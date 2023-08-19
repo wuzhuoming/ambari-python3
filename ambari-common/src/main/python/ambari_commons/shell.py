@@ -22,7 +22,7 @@ import logging
 import os
 import string
 import signal
-from ambari_commons import subprocess32 as subprocess
+import subprocess as subprocess
 import threading
 from contextlib import contextmanager
 import copy
@@ -182,7 +182,7 @@ class PopenEx(subprocess.Popen):
   Same nice Popen with stdout handles hack to allow pty instead of pipe. This will allow to control terminal geometry
   to eliminate some applications bugs with output formatting according to terminal width.
 
-  TODO: move the code directly to subprocess32.py
+  TODO: move the code directly to subprocess.py
   """
 
   def _get_handles(self, stdin, stdout, stderr):
@@ -229,7 +229,7 @@ def quote_bash_args(command):
   if not command:
     return "''"
 
-  if not isinstance(command, basestring):
+  if not isinstance(command, str):
     raise ValueError("Command should be a list of strings, found '{0}' in command list elements".format(str(command)))
 
   valid = set(string.ascii_letters + string.digits + '@%_-+=:,./')

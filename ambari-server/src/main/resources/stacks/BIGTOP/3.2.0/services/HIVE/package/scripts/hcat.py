@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -34,7 +34,7 @@ from ambari_commons.constants import SERVICE
 
 
 def hcat():
-  import params
+  from scripts import params
 
   Directory(params.hive_conf_dir,
             create_parents = True,
@@ -60,7 +60,7 @@ def hcat():
             configuration_attributes=params.config['configurationAttributes']['hive-site'],
             owner=params.hive_user,
             group=params.user_group,
-            mode=0644)
+            mode=0o644)
 
   File(format("{hcat_conf_dir}/hcat-env.sh"),
        owner=params.webhcat_user,

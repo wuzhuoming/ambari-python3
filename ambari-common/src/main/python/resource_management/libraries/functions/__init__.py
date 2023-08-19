@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -19,6 +19,10 @@ limitations under the License.
 Ambari Agent
 
 """
+import os
+import sys
+module_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(module_root)
 
 import platform
 

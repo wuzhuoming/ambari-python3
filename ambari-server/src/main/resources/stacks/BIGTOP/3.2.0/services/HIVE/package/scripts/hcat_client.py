@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -18,7 +18,7 @@ limitations under the License.
 
 """
 
-from hcat import hcat
+from scripts.hcat import hcat
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 from resource_management.core.logger import Logger
@@ -31,12 +31,12 @@ from resource_management.libraries.script.script import Script
 
 class HCatClient(Script):
   def install(self, env):
-    import params
+    from scripts import params
     self.install_packages(env)
     self.configure(env)
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hcat()
 
@@ -55,7 +55,7 @@ class HCatClient(Script):
     """
     Logger.info("Executing Hive HCat Client Stack Upgrade pre-restart")
 
-    import params
+    from scripts import params
     env.set_params(params)
 
     # this function should not execute if the stack version does not support rolling upgrade

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -28,7 +28,7 @@ from ambari_commons.os_family_impl import OsFamilyFuncImpl, OsFamilyImpl
 from ambari_commons import OSConst
 
 def hcat_service_check():
-    import params
+    from scripts import params
     unique = get_unique_id_and_date()
     output_file = format("{hive_apps_whs_dir}/hcatsmoke{unique}")
     test_cmd = format("fs -test -e {output_file}")
@@ -41,7 +41,7 @@ def hcat_service_check():
 
     File(format("{tmp_dir}/hcatSmoke.sh"),
          content=StaticFile("hcatSmoke.sh"),
-         mode=0755
+         mode=0o755
     )
 
     prepare_cmd = format("{kinit_cmd}env JAVA_HOME={java64_home} {tmp_dir}/hcatSmoke.sh hcatsmoke{unique} prepare {purge_tables}")

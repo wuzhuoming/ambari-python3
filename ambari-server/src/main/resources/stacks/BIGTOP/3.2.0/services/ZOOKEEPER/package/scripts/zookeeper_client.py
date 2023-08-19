@@ -31,23 +31,23 @@ from resource_management.core.exceptions import ClientComponentHasNoStatus
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyFuncImpl, OsFamilyImpl
 
-from zookeeper import zookeeper
+from scripts.zookeeper import zookeeper
 
 class ZookeeperClient(Script):
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     zookeeper(type='client')
     pass
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     self.configure(env)
     pass
 
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     pass
 
@@ -63,7 +63,7 @@ class ZookeeperClientLinux(ZookeeperClient):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade pre-restart")
-    import params
+    from scripts import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, format_stack_version(params.version)):
@@ -73,7 +73,7 @@ class ZookeeperClientLinux(ZookeeperClient):
 class ZookeeperClientWindows(ZookeeperClient):
   def install(self, env):
     # client checks env var to determine if it is installed
-    if not os.environ.has_key("ZOOKEEPER_HOME"):
+    if "ZOOKEEPER_HOME" not in os.environ:
       self.install_packages(env)
     self.configure(env)
 

@@ -20,7 +20,7 @@ import os
 from resource_management.core.resources.system import Directory, Execute, File
 from resource_management.libraries.functions.check_process_status import check_process_status
 from resource_management.libraries.functions.mounted_dirs_helper import handle_mounted_dirs
-from utils import service
+from scripts.utils import service
 from ambari_commons.os_family_impl import OsFamilyImpl, OsFamilyFuncImpl
 from ambari_commons import OSConst
 
@@ -30,7 +30,7 @@ def create_dirs(data_dir):
   :param data_dir: The directory to create
   :param params: parameters
   """
-  import params
+  from scripts import params
   Directory(data_dir,
             create_parents = True,
             cd_access="a",
@@ -43,10 +43,10 @@ def create_dirs(data_dir):
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def datanode(action=None):
   if action == "configure":
-    import params
+    from scripts import params
     Directory(params.dfs_domain_socket_dir,
               create_parents = True,
-              mode=0751,
+              mode=0o751,
               owner=params.hdfs_user,
               group=params.user_group)
 
@@ -56,12 +56,12 @@ def datanode(action=None):
     File(params.data_dir_mount_file,
          owner=params.hdfs_user,
          group=params.user_group,
-         mode=0644,
+         mode=0o644,
          content=data_dir_to_mount_file_content
     )
 
   elif action == "start" or action == "stop":
-    import params
+    from scripts import params
     service(
       action=action, name="datanode",
       user=params.hdfs_user,
@@ -69,7 +69,7 @@ def datanode(action=None):
       create_log_dir=True
     )
   elif action == "status":
-    import status_params
+    from scripts import status_params
     check_process_status(status_params.datanode_pid_file)
 
 
@@ -78,8 +78,8 @@ def datanode(action=None):
   if action == "configure":
     pass
   elif(action == "start" or action == "stop"):
-    import params
+    from scripts import params
     Service(params.datanode_win_service_name, action=action)
   elif action == "status":
-    import status_params
+    from scripts import status_params
     check_windows_service_status(status_params.datanode_win_service_name)

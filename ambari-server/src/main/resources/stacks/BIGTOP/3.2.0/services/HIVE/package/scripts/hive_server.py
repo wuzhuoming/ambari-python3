@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -19,10 +19,10 @@ limitations under the License.
 """
 
 # Local Imports
-from hive import hive
-import hive_server_upgrade
-from hive_service import hive_service
-from setup_ranger_hive import setup_ranger_hive
+from scripts.hive import hive
+from scripts import hive_server_upgrade
+from scripts.hive_service import hive_service
+from scripts.setup_ranger_hive import setup_ranger_hive
 
 # Ambari Commons & Resource Management Imports
 from resource_management.core.logger import Logger
@@ -40,12 +40,12 @@ class HiveServer(Script):
     self.install_packages(env)
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hive(name='hiveserver2')
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     self.configure(env) # FOR SECURITY
 
@@ -54,7 +54,7 @@ class HiveServer(Script):
 
 
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
 
     # always de-register the old hive instance so that ZK can route clients
@@ -72,7 +72,7 @@ class HiveServer(Script):
 
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
 
     # Recursively check all existing gmetad pid files
@@ -81,7 +81,7 @@ class HiveServer(Script):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Hive Server Stack Upgrade pre-restart")
-    import params
+    from scripts import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
@@ -96,7 +96,7 @@ class HiveServer(Script):
       return path
 
   def disable_security(self, env):
-    import params
+    from scripts import params
     zkmigrator = ZkMigrator(params.hive_zookeeper_quorum, params.java_exec, params.java64_home, params.jaas_file, params.hive_user)
     if params.hive_cluster_token_zkstore:
       zkmigrator.set_acls(self._base_node(params.hive_cluster_token_zkstore), 'world:anyone:crdwa')
@@ -106,15 +106,15 @@ class HiveServer(Script):
         'world:anyone:crdwa')
 
   def get_log_folder(self):
-    import params
+    from scripts import params
     return params.hive_log_dir
   
   def get_user(self):
-    import params
+    from scripts import params
     return params.hive_user
 
   def get_pid_files(self):
-    import status_params
+    from scripts import status_params
     return [status_params.hive_pid]
 
 if __name__ == "__main__":

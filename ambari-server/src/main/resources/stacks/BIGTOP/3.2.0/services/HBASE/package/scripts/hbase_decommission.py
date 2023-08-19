@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -27,7 +27,7 @@ from resource_management.core.logger import Logger
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def hbase_decommission(env):
-  import params
+  from scripts. import params
 
   env.set_params(params)
   File(params.region_drainer, content=StaticFile("draining_servers.rb"), owner=params.hbase_user, mode="f")
@@ -47,18 +47,18 @@ def hbase_decommission(env):
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def hbase_decommission(env):
-  import params
+  from scripts import params
 
   env.set_params(params)
   kinit_cmd = params.kinit_cmd_master
 
   File(params.region_drainer,
        content=StaticFile("draining_servers.rb"),
-       mode=0755
+       mode=0o755
        )
   File(params.region_drainer2,
        content=StaticFile("draining_servers2.rb"),
-       mode=0755
+       mode=0o755
        )
 
   if params.hbase_excluded_hosts and params.hbase_excluded_hosts.split(","):

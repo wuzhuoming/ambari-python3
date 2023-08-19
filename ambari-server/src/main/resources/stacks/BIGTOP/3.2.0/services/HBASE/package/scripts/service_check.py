@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -23,7 +23,7 @@ from resource_management.libraries.functions.format import format
 from resource_management.core.resources.system import Execute, File
 from resource_management.core.source import StaticFile
 from resource_management.core.source import Template
-import functions
+from scripts import functions
 from ambari_commons import OSCheck, OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 
@@ -35,7 +35,7 @@ class HbaseServiceCheck(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class HbaseServiceCheckWindows(HbaseServiceCheck):
   def service_check(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     smoke_cmd = os.path.join(params.stack_root, "Run-SmokeTests.cmd")
     service = "HBASE"
@@ -45,7 +45,7 @@ class HbaseServiceCheckWindows(HbaseServiceCheck):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class HbaseServiceCheckDefault(HbaseServiceCheck):
   def service_check(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     
     output_file = "/apps/hbase/data/ambarismoketest"
@@ -55,16 +55,16 @@ class HbaseServiceCheckDefault(HbaseServiceCheck):
 
     File( format("{exec_tmp_dir}/hbaseSmokeVerify.sh"),
       content = StaticFile("hbaseSmokeVerify.sh"),
-      mode = 0755
+      mode = 0o755
     )
 
     File(hbase_servicecheck_cleanup_file,
       content = StaticFile("hbase-smoke-cleanup.sh"),
-      mode = 0755
+      mode = 0o755
     )
   
     File( hbase_servicecheck_file,
-      mode = 0755,
+      mode = 0o755,
       content = Template('hbase-smoke.sh.j2')
     )
     
@@ -75,7 +75,7 @@ class HbaseServiceCheckDefault(HbaseServiceCheck):
       File( hbase_grant_premissions_file,
         owner   = params.hbase_user,
         group   = params.user_group,
-        mode    = 0755,
+        mode    = 0o755,
         content = Template('hbase_grant_permissions.j2')
       )
 

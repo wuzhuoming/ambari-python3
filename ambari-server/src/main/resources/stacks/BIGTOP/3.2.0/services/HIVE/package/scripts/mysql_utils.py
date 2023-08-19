@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -20,14 +20,14 @@ limitations under the License.
 import os
 
 # Local Imports
-import mysql_users
+from scripts import mysql_users
 
 # Ambari Commons & Resource Management Imports
 from resource_management.core.resources.system import Execute
 
 
 def mysql_configure():
-  import params
+  from scripts import params
 
   # required for running hive
   for mysql_configname in params.mysql_confignames:

@@ -31,7 +31,7 @@ import traceback
 
 
 def webhcat_service(action='start', upgrade_type=None):
-  import params
+  from scripts import params
 
   cmd = format('{webhcat_bin_dir}/webhcat_server.sh')
 
@@ -88,7 +88,7 @@ def graceful_stop(cmd):
   :param cmd: the command to run to stop the daemon
   :return:
   """
-  import params
+  from scripts import params
   daemon_cmd = format('{cmd} stop')
 
   Execute(daemon_cmd, environment = { 'HIVE_HOME': params.hive_home }, user = params.webhcat_user)

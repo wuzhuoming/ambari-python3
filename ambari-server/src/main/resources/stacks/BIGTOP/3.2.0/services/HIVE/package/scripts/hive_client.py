@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -22,7 +22,7 @@ limitations under the License.
 import sys
 
 # Local Imports
-from hive import hive
+from scripts.hive import hive
 
 # Ambari Commons & Resource Management Imports
 from resource_management.core.exceptions import ClientComponentHasNoStatus
@@ -35,7 +35,7 @@ from resource_management.libraries.functions.stack_features import check_stack_f
 
 class HiveClient(Script):
   def install(self, env):
-    import params
+    from scripts import params
     self.install_packages(env)
     self.configure(env)
 
@@ -43,14 +43,14 @@ class HiveClient(Script):
     raise ClientComponentHasNoStatus()
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hive(name='client')
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Hive client Stack Upgrade pre-restart")
 
-    import params
+    from scripts import params
     env.set_params(params)
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
       stack_select.select_packages(params.version)
