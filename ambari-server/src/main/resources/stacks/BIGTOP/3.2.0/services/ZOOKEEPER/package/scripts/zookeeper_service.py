@@ -28,7 +28,7 @@ from resource_management.core.resources.service import Service
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def zookeeper_service(action='start', upgrade_type=None):
-  import params
+  from scripts import params
 
   cmd = format("env ZOOCFGDIR={config_dir} ZOOCFG=zoo.cfg {zk_bin}/zkServer.sh")
 
@@ -65,7 +65,7 @@ def zookeeper_service(action='start', upgrade_type=None):
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def zookeeper_service(action='start', rolling_restart=False):
-  import params
+  from scripts import params
   if action == 'start':
     Service(params.zookeeper_win_service_name, action="start")
   elif action == 'stop':

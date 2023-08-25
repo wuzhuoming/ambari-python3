@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -23,8 +23,8 @@ import os
 import subprocess
 import time
 # HCAT and WEBHCAT checks
-from hcat_service_check import hcat_service_check
-from webhcat_service_check import webhcat_service_check
+from scripts.hcat_service_check import hcat_service_check
+from scripts.webhcat_service_check import webhcat_service_check
 # Ambari Commons & Resource Management Imports
 from resource_management.core.exceptions import Fail
 from resource_management.core.logger import Logger
@@ -42,7 +42,7 @@ class HiveServiceCheck(Script):
     Logger.initialize_logger()
 
   def service_check(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     if params.security_enabled:
@@ -67,7 +67,7 @@ class HiveServiceCheck(Script):
     webhcat_service_check()
 
   def check_hive_server(self, env, server_component_name, kinit_cmd, address_list, server_port, ssl_keystore, ssl_password):
-    import params
+    from scripts import params
     env.set_params(params)
     Logger.info("Server Address List : {0}, Port : {1}, SSL KeyStore : {2}".format(address_list, server_port, ssl_keystore))
 
@@ -116,7 +116,7 @@ class HiveServiceCheck(Script):
   Performs Service check for LLAP app
   """
   def check_llap(self, env, kinit_cmd, address, port, key, hive_auth="NOSASL", transport_mode="binary", http_endpoint="cliservice"):
-    import params
+    from scripts import params
     env.set_params(params)
 
     unique_id = get_unique_id_and_date()

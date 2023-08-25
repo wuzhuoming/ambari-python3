@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -21,8 +21,8 @@ from ambari_commons import OSCheck
 from resource_management.libraries.functions.default import default
 
 if OSCheck.is_windows_family():
-  from params_windows import *
+  from scripts.params_windows import *
 else:
-  from params_linux import *
+  from scripts.params_linux import *
 
 retryAble = default("/commandParams/command_retry_enabled", False)

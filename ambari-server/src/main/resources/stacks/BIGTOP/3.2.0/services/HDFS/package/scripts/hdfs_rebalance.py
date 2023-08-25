@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''
 Licensed to the Apache Software Foundation (ASF) under one
@@ -47,7 +47,7 @@ class HdfsParser():
 class HdfsLine():
   
   class LineType:
-    HeaderStart, Progress, ProgressEnd, Unknown = range(4)
+    HeaderStart, Progress, ProgressEnd, Unknown = list(range(4))
   
   
   MEMORY_SUFFIX = ['B','KB','MB','GB','TB','PB','EB']
@@ -136,7 +136,7 @@ class HdfsLine():
 
 
 def is_balancer_running():
-  import params
+  from scripts import params
   check_balancer_command = "fs -test -e /system/balancer.id"
   does_hdfs_file_exist = False
   try:

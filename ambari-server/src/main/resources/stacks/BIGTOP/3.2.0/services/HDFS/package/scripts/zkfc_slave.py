@@ -17,8 +17,8 @@ limitations under the License.
 
 """
 # this is needed to avoid a circular dependency since utils.py calls this class
-import utils
-from hdfs import hdfs
+from scripts import utils
+from scripts.hdfs import hdfs
 
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
@@ -40,7 +40,7 @@ from resource_management.core.resources.system import Execute
 
 class ZkfcSlave(Script):
   def install(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     self.install_packages(env)
     
@@ -49,14 +49,14 @@ class ZkfcSlave(Script):
     
   @staticmethod
   def configure_static(env):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs("zkfc_slave")
     utils.set_up_zkfc_security(params)
     pass
 
   def format(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     utils.set_up_zkfc_security(params)
@@ -75,12 +75,12 @@ class ZkfcSlaveDefault(ZkfcSlave):
     
   @staticmethod
   def start_static(env, upgrade_type=None):
-    import params
+    from scripts import params
 
     env.set_params(params)
     ZkfcSlave.configure_static(env)
     Directory(params.hadoop_pid_dir_prefix,
-              mode=0755,
+              mode=0o755,
               owner=params.hdfs_user,
               group=params.user_group
     )
@@ -105,7 +105,7 @@ class ZkfcSlaveDefault(ZkfcSlave):
 
   @staticmethod
   def stop_static(env, upgrade_type=None):
-    import params
+    from scripts import params
 
     env.set_params(params)
     utils.service(
@@ -119,12 +119,12 @@ class ZkfcSlaveDefault(ZkfcSlave):
     
   @staticmethod
   def status_static(env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
     check_process_status(status_params.zkfc_pid_file)
 
   def disable_security(self, env):
-    import params
+    from scripts import params
 
     if not params.stack_supports_zk_security:
       return
@@ -133,20 +133,20 @@ class ZkfcSlaveDefault(ZkfcSlave):
     zkmigrator.set_acls(params.zk_namespace if params.zk_namespace.startswith('/') else '/' + params.zk_namespace, 'world:anyone:crdwa')
 
   def get_log_folder(self):
-    import params
+    from scripts import params
     return params.hdfs_log_dir
   
   def get_user(self):
-    import params
+    from scripts import params
     return params.hdfs_user
 
   def get_pid_files(self):
-    import status_params
+    from scripts import status_params
     return [status_params.zkfc_pid_file]
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade pre-restart")
-    import params
+    from scripts import params
     env.set_params(params)
     if check_stack_feature(StackFeature.ZKFC_VERSION_ADVERTISED, params.version_for_stack_feature_checks):
       stack_select.select_packages(params.version)
@@ -175,16 +175,16 @@ def initialize_ha_zookeeper(params):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class ZkfcSlaveWindows(ZkfcSlave):
   def start(self, env):
-    import params
+    from scripts import params
     self.configure(env)
     Service(params.zkfc_win_service_name, action="start")
 
   def stop(self, env):
-    import params
+    from scripts import params
     Service(params.zkfc_win_service_name, action="stop")
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     from resource_management.libraries.functions.windows_service_utils import check_windows_service_status
 
     env.set_params(status_params)

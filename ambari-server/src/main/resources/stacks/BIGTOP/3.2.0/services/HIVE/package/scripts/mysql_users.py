@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -22,15 +22,15 @@ limitations under the License.
 from resource_management.core.resources.system import Execute, File
 from resource_management.core.source import StaticFile
 from resource_management.libraries.functions.format import format
-from mysql_service import get_daemon_name
+from scripts.mysql_service import get_daemon_name
 
 
 # Used to add hive access to the needed components
 def mysql_adduser():
-  import params
+  from scripts import params
   
   File(params.mysql_adduser_path,
-       mode=0755,
+       mode=0o755,
        content=StaticFile('addMysqlUser.sh')
   )
   hive_server_host = format("{hive_server_host}")
@@ -53,10 +53,10 @@ def mysql_adduser():
 
 # Removes hive access from components
 def mysql_deluser():
-  import params
+  from scripts import params
   
   File(params.mysql_deluser_path,
-       mode=0755,
+       mode=0o755,
        content=StaticFile('removeMysqlUser.sh')
   )
   hive_server_host = format("{hive_server_host}")

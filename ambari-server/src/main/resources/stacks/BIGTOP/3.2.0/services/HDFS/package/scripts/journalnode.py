@@ -28,15 +28,15 @@ from resource_management.libraries.functions.security_commons import build_expec
   FILE_TYPE_XML
 from resource_management.core.logger import Logger
 from resource_management.core.resources.system import Directory
-from utils import service
-from hdfs import hdfs
-import journalnode_upgrade
+from scripts.utils import service
+from scripts.hdfs import hdfs
+from scripts import journalnode_upgrade
 from ambari_commons.os_family_impl import OsFamilyImpl
 from ambari_commons import OSConst
 
 class JournalNode(Script):
   def install(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     self.install_packages(env)  
 
@@ -45,14 +45,14 @@ class JournalNodeDefault(JournalNode):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade pre-restart")
-    import params
+    from scripts import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
       stack_select.select_packages(params.version)
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
 
     env.set_params(params)
     self.configure(env)
@@ -68,12 +68,12 @@ class JournalNodeDefault(JournalNode):
       return
 
     Logger.info("Executing Stack Upgrade post-restart")
-    import params
+    from scripts import params
     env.set_params(params)
     journalnode_upgrade.post_upgrade_check()
 
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
 
     env.set_params(params)
     service(
@@ -83,7 +83,7 @@ class JournalNodeDefault(JournalNode):
     )
 
   def configure(self, env):
-    import params
+    from scripts import params
 
     Directory(params.jn_edits_dirs,
               create_parents = True,
@@ -96,46 +96,46 @@ class JournalNodeDefault(JournalNode):
     pass
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
 
     env.set_params(status_params)
     check_process_status(status_params.journalnode_pid_file)
 
   def get_log_folder(self):
-    import params
+    from scripts import params
     return params.hdfs_log_dir
   
   def get_user(self):
-    import params
+    from scripts import params
     return params.hdfs_user
 
   def get_pid_files(self):
-    import status_params
+    from scripts import status_params
     return [status_params.journalnode_pid_file]
 
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class JournalNodeWindows(JournalNode):
   def install(self, env):
-    import install_params
+    from scripts import install_params
     self.install_packages(env)
 
   def start(self, env):
-    import params
+    from scripts import params
     self.configure(env)
     Service(params.journalnode_win_service_name, action="start")
 
   def stop(self, env):
-    import params
+    from scripts import params
     Service(params.journalnode_win_service_name, action="stop")
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs("journalnode")
     pass
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
     check_windows_service_status(status_params.journalnode_win_service_name)
 

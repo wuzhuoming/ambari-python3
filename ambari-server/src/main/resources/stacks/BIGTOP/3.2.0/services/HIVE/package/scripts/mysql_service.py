@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -26,7 +26,7 @@ from resource_management.libraries.functions.format import format
 
 
 def get_daemon_name():
-  import status_params
+  from scripts import status_params
 
   for service_file_template in status_params.SERVICE_FILE_TEMPLATES:
     for possible_daemon_name in status_params.POSSIBLE_DAEMON_NAMES:
@@ -48,14 +48,14 @@ def mysql_service(action='start'):
     except Fail:
       raise ComponentIsNotRunning()
   elif action == 'stop':
-    import params
+    from scripts import params
     Execute(cmd,
             logoutput = True,
             only_if = status_cmd,
             sudo = True,
     )
   elif action == 'start':
-    import params   
+    from scripts import params
     Execute(cmd,
       logoutput = True,
       not_if = status_cmd,

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -23,9 +23,9 @@ import sys
 import os
 
 # Local Imports
-import mysql_users
-from mysql_service import mysql_service
-from mysql_utils import mysql_configure
+from scripts import mysql_users
+from scripts.mysql_service import mysql_service
+from scripts.mysql_utils import mysql_configure
 
 # Ambari Commons & Resource Management Imports
 from resource_management.libraries.script.script import Script
@@ -33,32 +33,32 @@ from resource_management.libraries.script.script import Script
 
 class MysqlServer(Script):
   def install(self, env):
-    import params
+    from scripts import params
     self.install_packages(env)
     self.configure(env)
 
   def clean(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     mysql_users.mysql_deluser()
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     mysql_configure()
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     mysql_service(action='start')
 
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     mysql_service(action='stop')
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
 
     mysql_service(action='status')

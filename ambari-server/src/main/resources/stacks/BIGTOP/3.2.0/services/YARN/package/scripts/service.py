@@ -32,8 +32,8 @@ from ambari_commons import subprocess32
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def service(componentName, action='start', serviceName='yarn'):
-  import status_params
-  if status_params.service_map.has_key(componentName):
+  from scripts import status_params
+  if componentName in status_params.service_map:
     service_name = status_params.service_map[componentName]
     if action == 'start' or action == 'stop':
       Service(service_name, action=action)
@@ -43,8 +43,8 @@ def service(componentName, action='start', serviceName='yarn'):
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def service(componentName, action='start', serviceName='yarn'):
-  import params
-  import status_params
+  from scripts import params
+  from scripts import status_params
 
   hadoop_env_exports = {
     'HADOOP_LIBEXEC_DIR': params.hadoop_libexec_dir

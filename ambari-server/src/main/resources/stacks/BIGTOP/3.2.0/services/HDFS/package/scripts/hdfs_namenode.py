@@ -35,8 +35,8 @@ from resource_management.libraries.resources.execute_hdfs import ExecuteHDFS
 from resource_management.libraries.functions import Direction
 from ambari_commons import OSCheck, OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl, OsFamilyFuncImpl
-from utils import get_dfsadmin_base_command
-from utils import set_up_zkfc_security
+from scripts.utils import get_dfsadmin_base_command
+from scripts.utils import set_up_zkfc_security
 
 if OSCheck.is_windows_family():
   from resource_management.libraries.functions.windows_service_utils import check_windows_service_status
@@ -44,10 +44,10 @@ if OSCheck.is_windows_family():
 from resource_management.core.exceptions import Fail
 from resource_management.core.logger import Logger
 
-from utils import service, safe_zkfc_op, is_previous_fs_image
-from setup_ranger_hdfs import setup_ranger_hdfs, create_ranger_audit_hdfs_directories
+from scripts.utils import service, safe_zkfc_op, is_previous_fs_image
+from scripts.setup_ranger_hdfs import setup_ranger_hdfs, create_ranger_audit_hdfs_directories
 
-import namenode_upgrade
+from . import namenode_upgrade
 
 def wait_for_safemode_off(hdfs_binary, afterwait_sleep=0, execute_kinit=False, retries=115, sleep_seconds=10):
   """
@@ -55,7 +55,7 @@ def wait_for_safemode_off(hdfs_binary, afterwait_sleep=0, execute_kinit=False, r
   all of the DataNodes, we need for NameNode to receive all of the block reports and leave safemode.
   If HA is present, then this command will run individually on each NameNode, which checks for its own address.
   """
-  import params
+  from scripts import params
 
   sleep_minutes = int(sleep_seconds * retries / 60)
 
@@ -92,7 +92,7 @@ def namenode(action=None, hdfs_binary=None, do_format=True, upgrade_type=None,
     raise Fail('"hdfs_binary" parameter is required for function namenode().')
 
   if action == "configure":
-    import params
+    from scripts import params
     #we need this directory to be present before any action(HA manual steps for
     #additional namenode)
     create_name_dirs(params.dfs_name_dir)
@@ -102,7 +102,7 @@ def namenode(action=None, hdfs_binary=None, do_format=True, upgrade_type=None,
   elif action == "start":
     Logger.info("Called service {0} with upgrade_type: {1}".format(action, str(upgrade_type)))
     setup_ranger_hdfs(upgrade_type=upgrade_type)
-    import params
+    from scripts import params
 
     File(params.exclude_file_path,
          content=Template("exclude_hosts_list.j2"),
@@ -242,13 +242,13 @@ def namenode(action=None, hdfs_binary=None, do_format=True, upgrade_type=None,
       Logger.info("Skipping creation of HDFS directories since this is either not the Active NameNode or we did not wait for Safemode to finish.")
 
   elif action == "stop":
-    import params
+    from scripts import params
     service(
       action="stop", name="namenode",
       user=params.hdfs_user
     )
   elif action == "status":
-    import status_params
+    from scripts import status_params
     check_process_status(status_params.namenode_pid_file)
   elif action == "decommission":
     decommission()
@@ -266,7 +266,7 @@ def namenode(action=None, hdfs_binary=None, do_format=True, upgrade_type=None,
   if action == "configure":
     pass
   elif action == "start":
-    import params
+    from scripts import params
     #TODO: Replace with format_namenode()
     namenode_format_marker = os.path.join(params.hadoop_conf_dir,"NN_FORMATTED")
     if not os.path.exists(namenode_format_marker):
@@ -275,20 +275,20 @@ def namenode(action=None, hdfs_binary=None, do_format=True, upgrade_type=None,
       open(namenode_format_marker, 'a').close()
     Service(params.namenode_win_service_name, action=action)
   elif action == "stop":
-    import params
+    from scripts import params
     Service(params.namenode_win_service_name, action=action)
   elif action == "status":
-    import status_params
+    from scripts import status_params
     check_windows_service_status(status_params.namenode_win_service_name)
   elif action == "decommission":
     decommission()
 
 def create_name_dirs(directories):
-  import params
+  from scripts import params
 
   dirs = directories.split(",")
   Directory(dirs,
-            mode=0755,
+            mode=0o755,
             owner=params.hdfs_user,
             group=params.user_group,
             create_parents = True,
@@ -297,7 +297,7 @@ def create_name_dirs(directories):
 
 
 def create_hdfs_directories(name_service):
-  import params
+  from scripts import params
 
   name_services = None if name_service is None else [name_service]
 
@@ -305,7 +305,7 @@ def create_hdfs_directories(name_service):
                        type="directory",
                        action="create_on_execute",
                        owner=params.hdfs_user,
-                       mode=0777,
+                       mode=0o777,
                        nameservices=name_services,
   )
   params.HdfsResource(params.smoke_hdfs_user_dir,
@@ -320,7 +320,7 @@ def create_hdfs_directories(name_service):
   )
 
 def format_namenode(force=None):
-  import params
+  from scripts import params
 
   old_mark_dir = params.namenode_formatted_old_mark_dirs
   mark_dir = params.namenode_formatted_mark_dirs
@@ -440,7 +440,7 @@ def is_namenode_formatted(params):
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def refreshProxyUsers():
-  import params
+  from scripts import params
 
   if params.security_enabled:
     Execute(params.nn_kinit_cmd,
@@ -461,7 +461,7 @@ def refreshProxyUsers():
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def decommission():
-  import params
+  from scripts import params
 
   hdfs_user = params.hdfs_user
   conf_dir = params.hadoop_conf_dir
@@ -501,7 +501,7 @@ def decommission():
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def decommission():
-  import params
+  from scripts import params
   hdfs_user = params.hdfs_user
   conf_dir = params.hadoop_conf_dir
 
@@ -589,9 +589,9 @@ def is_namenode_bootstrapped(params):
 
 
 def find_timeout():
-  import params
+  from scripts import params
 
-  if isinstance(params.command_timeout, (int, long)):
+  if isinstance(params.command_timeout, int):
     return params.command_timeout
 
   return int(params.command_timeout)
@@ -608,7 +608,7 @@ def is_this_namenode_active(name_service):
   If the other Active NameNode is then restarted, there can be a loss of service if this
   NameNode has not entered Standby.
   """
-  import params
+  from scripts import params
 
   # returns ([('nn1', 'c6401.ambari.apache.org:50070')], [('nn2', 'c6402.ambari.apache.org:50070')], [])
   #                  0                                           1                                   2

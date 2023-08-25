@@ -38,7 +38,7 @@ try:
     service_advisor = imp.load_module('service_advisor', fp, PARENT_FILE, ('.py', 'rb', imp.PY_SOURCE))
 except Exception as e:
   traceback.print_exc()
-  print "Failed to load parent."
+  print("Failed to load parent.")
 
 
 class HDFSServiceAdvisor(service_advisor.ServiceAdvisor):
@@ -240,15 +240,15 @@ class HDFSRecommender(service_advisor.ServiceAdvisor):
     # dfs.datanode.du.reserved should be set to 10-15% of volume size
     # For each host selects maximum size of the volume. Then gets minimum for all hosts.
     # This ensures that each host will have at least one data dir with available space.
-    reservedSizeRecommendation = 0l #kBytes
+    reservedSizeRecommendation = 0 #kBytes
     for host in hosts["items"]:
       mountPoints = []
       mountPointDiskAvailableSpace = [] #kBytes
       for diskInfo in host["Hosts"]["disk_info"]:
         mountPoints.append(diskInfo["mountpoint"])
-        mountPointDiskAvailableSpace.append(long(diskInfo["size"]))
+        mountPointDiskAvailableSpace.append(int(diskInfo["size"]))
 
-      maxFreeVolumeSizeForHost = 0l #kBytes
+      maxFreeVolumeSizeForHost = 0 #kBytes
       for dataDir in dataDirs:
         mp = HDFSRecommender.getMountPointForDir(dataDir, mountPoints)
         for i in range(len(mountPoints)):
@@ -870,7 +870,7 @@ class HDFSValidator(service_advisor.ServiceAdvisor):
       try:
         if hdfs_site['dfs.namenode.inode.attributes.provider.class'].lower() != 'org.apache.ranger.authorization.hadoop.RangerHdfsAuthorizer'.lower():
           raise ValueError()
-      except (KeyError, ValueError), e:
+      except (KeyError, ValueError) as e:
         message = "dfs.namenode.inode.attributes.provider.class needs to be set to 'org.apache.ranger.authorization.hadoop.RangerHdfsAuthorizer' if Ranger HDFS Plugin is enabled."
         validationItems.append({"config-name": 'dfs.namenode.inode.attributes.provider.class',
                                 "item": self.getWarnItem(message)})

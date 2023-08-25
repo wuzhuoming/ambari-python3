@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -19,7 +19,7 @@ limitations under the License.
 """
 
 import os
-import status_params
+from scripts import status_params
 from resource_management.libraries.script.script import Script
 
 # server configurations

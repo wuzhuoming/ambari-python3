@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -25,7 +25,7 @@ from ambari_commons import OSConst
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def hbase_decommission(env):
-  import params
+  from scripts import params
 
   env.set_params(params)
 
@@ -44,7 +44,7 @@ def hbase_decommission(env):
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def hbase_decommission(env):
-  import params
+  from scripts import params
 
   env.set_params(params)
   kinit_cmd = params.kinit_cmd_master

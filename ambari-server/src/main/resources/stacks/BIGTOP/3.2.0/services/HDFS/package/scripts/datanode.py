@@ -16,11 +16,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 """
-import datanode_upgrade
+from scripts import datanode_upgrade
 
 from ambari_commons.constants import UPGRADE_TYPE_ROLLING
 
-from hdfs_datanode import datanode
+from scripts.hdfs_datanode import datanode
 from resource_management import Script, Fail, shell, Logger
 from resource_management.libraries.script.script import Script
 from resource_management.libraries.functions import stack_select
@@ -31,11 +31,11 @@ from resource_management.libraries.functions.decorator import retry
 from resource_management.libraries.functions.security_commons import build_expectations, \
   cached_kinit_executor, get_params_from_filesystem, validate_security_config_properties, FILE_TYPE_XML
 from resource_management.core.logger import Logger
-from hdfs import hdfs, reconfig
+from scripts.hdfs import hdfs, reconfig
 from ambari_commons.os_family_impl import OsFamilyImpl
 from ambari_commons import OSConst
-from utils import get_hdfs_binary
-from utils import get_dfsadmin_base_command
+from scripts.utils import get_hdfs_binary
+from scripts.utils import get_dfsadmin_base_command
 
 class DataNode(Script):
 
@@ -47,35 +47,35 @@ class DataNode(Script):
 
 
   def install(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     self.install_packages(env)
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs("datanode")
     datanode(action="configure")
 
   def save_configs(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs("datanode")
 
   def reload_configs(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     Logger.info("RELOAD CONFIGS")
     reconfig("datanode", params.dfs_dn_ipc_address)
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     self.configure(env)
     datanode(action="start")
 
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     # pre-upgrade steps shutdown the datanode, so there's no need to call
 
@@ -90,7 +90,7 @@ class DataNode(Script):
     self.check_datanode_shutdown(hdfs_binary)
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
     datanode(action = "status")
 
@@ -111,7 +111,7 @@ class DataNode(Script):
     :param hdfs_binary: name/path of the HDFS binary to use
     :return:
     """
-    import params
+    from scripts import params
 
     # override stock retry timeouts since after 30 seconds, the datanode is
     # marked as dead and can affect HBase during RU
@@ -137,35 +137,35 @@ class DataNodeDefault(DataNode):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing DataNode Stack Upgrade pre-restart")
-    import params
+    from scripts import params
     env.set_params(params)
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
       stack_select.select_packages(params.version)
 
   def post_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing DataNode Stack Upgrade post-restart")
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs_binary = self.get_hdfs_binary()
     # ensure the DataNode has started and rejoined the cluster
     datanode_upgrade.post_upgrade_check(hdfs_binary)
       
   def get_log_folder(self):
-    import params
+    from scripts import params
     return params.hdfs_log_dir
   
   def get_user(self):
-    import params
+    from scripts import params
     return params.hdfs_user
 
   def get_pid_files(self):
-    import status_params
+    from scripts import status_params
     return [status_params.datanode_pid_file]
 
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class DataNodeWindows(DataNode):
   def install(self, env):
-    import install_params
+    from scripts import install_params
     self.install_packages(env)
 
 if __name__ == "__main__":

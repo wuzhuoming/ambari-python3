@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -25,11 +25,11 @@ from resource_management.libraries.functions.check_process_status import check_p
 from resource_management.libraries.functions.security_commons import build_expectations, \
   cached_kinit_executor, get_params_from_filesystem, validate_security_config_properties, \
   FILE_TYPE_XML
-from hbase import hbase
-from hbase_service import hbase_service
-from hbase_decommission import hbase_decommission
-import upgrade
-from setup_ranger_hbase import setup_ranger_hbase
+from scripts.hbase import hbase
+from scripts.hbase_service import hbase_service
+from scripts.hbase_decommission import hbase_decommission
+from scripts import upgrade
+from scripts.setup_ranger_hbase import setup_ranger_hbase
 from ambari_commons import OSCheck, OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 import os
@@ -40,17 +40,17 @@ from resource_management.core.logger import Logger
 
 class HbaseMaster(Script):
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hbase(name='master')
 
   def install(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     self.install_packages(env)
 
   def decommission(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hbase_decommission(env)
 
@@ -58,17 +58,17 @@ class HbaseMaster(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class HbaseMasterWindows(HbaseMaster):
   def start(self, env):
-    import status_params
+    from scripts import status_params
     self.configure(env)
     Service(status_params.hbase_master_win_service_name, action="start")
 
   def stop(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
     Service(status_params.hbase_master_win_service_name, action="stop")
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
     check_windows_service_status(status_params.hbase_master_win_service_name)
 
@@ -77,12 +77,12 @@ class HbaseMasterWindows(HbaseMaster):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class HbaseMasterDefault(HbaseMaster):
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     upgrade.prestart(env)
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     self.configure(env) # for security
     setup_ranger_hbase(upgrade_type=upgrade_type, service_name="hbase-master")
@@ -95,18 +95,18 @@ class HbaseMasterDefault(HbaseMaster):
     hbase_service('master', action = 'start')
     
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     hbase_service('master', action = 'stop')
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
 
     check_process_status(status_params.hbase_master_pid_file)
 
   def security_status(self, env):
-    import status_params
+    from scripts import status_params
 
     env.set_params(status_params)
     if status_params.security_enabled:
@@ -155,15 +155,15 @@ class HbaseMasterDefault(HbaseMaster):
       self.put_structured_out({"securityState": "UNSECURED"})
       
   def get_log_folder(self):
-    import params
+    from scripts import params
     return params.log_dir
   
   def get_user(self):
-    import params
+    from scripts import params
     return params.hbase_user
 
   def get_pid_files(self):
-    import status_params
+    from scripts import status_params
     return [status_params.hbase_master_pid_file]
 
 if __name__ == "__main__":

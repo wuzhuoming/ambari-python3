@@ -47,11 +47,11 @@ from ambari_commons.os_family_impl import OsFamilyImpl
 from ambari_commons import OSConst
 
 
-import namenode_upgrade
-from hdfs_namenode import namenode, wait_for_safemode_off, refreshProxyUsers, format_namenode
-from hdfs import hdfs, reconfig
-import hdfs_rebalance
-from utils import initiate_safe_zkfc_failover, get_hdfs_binary, get_dfsadmin_base_command
+from scripts import namenode_upgrade
+from scripts.hdfs_namenode import namenode, wait_for_safemode_off, refreshProxyUsers, format_namenode
+from scripts.hdfs import hdfs, reconfig
+from scripts import hdfs_rebalance
+from scripts.utils import initiate_safe_zkfc_failover, get_hdfs_binary, get_dfsadmin_base_command
 from resource_management.libraries.functions.namenode_ha_utils import get_hdfs_cluster_id_from_jmx
 
 # The hash algorithm to use to generate digests/hashes
@@ -66,38 +66,38 @@ class NameNode(Script):
     return get_hdfs_binary("hadoop-hdfs-namenode")
 
   def install(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     self.install_packages(env)
     #TODO we need this for HA because of manual steps
     self.configure(env)
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs("namenode")
     hdfs_binary = self.get_hdfs_binary()
     namenode(action="configure", hdfs_binary=hdfs_binary, env=env)
 
   def save_configs(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs()
 
   def reload_configs(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     Logger.info("RELOAD CONFIGS")
     reconfig("namenode", params.namenode_address)
 
   def reloadproxyusers(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     Logger.info("RELOAD HDFS PROXY USERS")
     refreshProxyUsers()
 
   def format(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     if params.security_enabled:
@@ -115,7 +115,7 @@ class NameNode(Script):
     )
 
   def bootstrap_standby(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     if params.security_enabled:
@@ -129,7 +129,7 @@ class NameNode(Script):
     )
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     self.configure(env)
     hdfs_binary = self.get_hdfs_binary()
@@ -148,7 +148,7 @@ class NameNode(Script):
       namenode_upgrade.create_upgrade_marker()
 
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs_binary = self.get_hdfs_binary()
     if upgrade_type == constants.UPGRADE_TYPE_ROLLING and params.dfs_ha_enabled:
@@ -159,19 +159,19 @@ class NameNode(Script):
     namenode(action="stop", hdfs_binary=hdfs_binary, upgrade_type=upgrade_type, env=env)
 
   def status(self, env):
-    import status_params
+    from scripts import status_params
     env.set_params(status_params)
     namenode(action="status", env=env)
 
   def decommission(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hdfs_binary = self.get_hdfs_binary()
     namenode(action="decommission", hdfs_binary=hdfs_binary)
     self.configure(env)
 
   def print_topology(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     Execute("hdfs dfsadmin -printTopology",
             user=params.hdfs_user,
@@ -187,7 +187,7 @@ class NameNodeDefault(NameNode):
     """
     Restore the snapshot during a Downgrade.
     """
-    print "TODO AMBARI-12698"
+    print("TODO AMBARI-12698")
     pass
 
   def prepare_express_upgrade(self, env):
@@ -210,7 +210,7 @@ class NameNodeDefault(NameNode):
     Prepare for a NameNode rolling upgrade in order to not lose any data.
     hdfs dfsadmin -rollingUpgrade prepare
     """
-    import params
+    from scripts import params
     Logger.info("Preparing the NameNodes for a NonRolling (aka Express) Upgrade.")
 
     if params.security_enabled:
@@ -251,14 +251,14 @@ class NameNodeDefault(NameNode):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade pre-restart")
-    import params
+    from scripts import params
     env.set_params(params)
 
     stack_select.select_packages(params.version)
 
   def post_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade post-restart")
-    import params
+    from scripts import params
     env.set_params(params)
 
     hdfs_binary = self.get_hdfs_binary()
@@ -271,7 +271,7 @@ class NameNodeDefault(NameNode):
     )
 
   def rebalancehdfs(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     name_node_parameters = json.loads( params.name_node_params )
@@ -286,7 +286,7 @@ class NameNodeDefault(NameNode):
       # to generate a (relatively) unique cache filename so that we can use it as needed.
       # TODO: params.tmp_dir=/var/lib/ambari-agent/tmp. However hdfs user doesn't have access to this path.
       # TODO: Hence using /tmp
-      ccache_file_name = "hdfs_rebalance_cc_" + HASH_ALGORITHM(format("{hdfs_principal_name}|{hdfs_user_keytab}")).hexdigest()
+      ccache_file_name = "hdfs_rebalance_cc_" + HASH_ALGORITHM(format("{hdfs_principal_name}|{hdfs_user_keytab}").encode()).hexdigest()
       ccache_file_path = os.path.join(tempfile.gettempdir(), ccache_file_name)
       rebalance_env['KRB5CCNAME'] = ccache_file_path
 
@@ -350,28 +350,28 @@ class NameNodeDefault(NameNode):
              "please consult with the HDFS administrators if they have triggred or killed the operation.")
 
   def get_log_folder(self):
-    import params
+    from scripts import params
     return params.hdfs_log_dir
   
   def get_user(self):
-    import params
+    from scripts import params
     return params.hdfs_user
 
   def get_pid_files(self):
-    import status_params
+    from scripts import status_params
     return [status_params.namenode_pid_file]
 
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class NameNodeWindows(NameNode):
   def install(self, env):
-    import install_params
+    from scripts import install_params
     self.install_packages(env)
     #TODO we need this for HA because of manual steps
     self.configure(env)
 
   def rebalancehdfs(self, env):
     from ambari_commons.os_windows import UserHelper, run_os_command_impersonated
-    import params
+    from scripts import params
     env.set_params(params)
 
     hdfs_username, hdfs_domain = UserHelper.parse_user_name(params.hdfs_user, ".")

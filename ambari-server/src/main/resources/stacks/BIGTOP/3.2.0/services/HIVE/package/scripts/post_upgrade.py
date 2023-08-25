@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -23,7 +23,7 @@ import shutil
 
 
 # Local Imports
-from hive import create_hive_hdfs_dirs
+from scripts.hive import create_hive_hdfs_dirs
 
 
 # Ambari Commons & Resource Management Imports
@@ -35,7 +35,7 @@ from resource_management.libraries.script import Script
 
 class HivePostUpgrade(Script):
   def move_tables(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     
     create_hive_hdfs_dirs()

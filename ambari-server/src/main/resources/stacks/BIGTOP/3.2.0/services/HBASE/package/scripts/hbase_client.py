@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -23,20 +23,20 @@ from resource_management.libraries.script.script import Script
 from resource_management.libraries.functions import stack_select
 from resource_management.libraries.functions.constants import StackFeature
 from resource_management.libraries.functions.stack_features import check_stack_feature
-from hbase import hbase
+from scripts.hbase import hbase
 from ambari_commons import OSCheck, OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 from resource_management.core.exceptions import ClientComponentHasNoStatus
 
 class HbaseClient(Script):
   def install(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     self.install_packages(env)
     self.configure(env)
 
   def configure(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     hbase(name='client')
 
@@ -52,7 +52,7 @@ class HbaseClientWindows(HbaseClient):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class HbaseClientDefault(HbaseClient):
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version): 
@@ -60,8 +60,8 @@ class HbaseClientDefault(HbaseClient):
       try:
         stack_select.select_packages(params.version)
       except Exception as e:
-        print "Ignoring error due to missing phoenix-client"
-        print str(e)
+        print("Ignoring error due to missing phoenix-client")
+        print(str(e))
 
 
 
