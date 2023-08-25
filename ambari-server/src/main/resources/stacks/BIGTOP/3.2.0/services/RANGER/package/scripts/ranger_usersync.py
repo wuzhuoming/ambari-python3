@@ -47,12 +47,12 @@ class RangerUsersync(Script):
         File(params.ugsync_policymgr_keystore,
              owner = params.unix_user,
              group = params.unix_group,
-             mode = 0640
+             mode = 0o640
              )
       File(ranger_ugsync_setup_marker,
            owner = params.unix_user,
            group = params.unix_group,
-           mode = 0640
+           mode = 0o640
            )
 
 

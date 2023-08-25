@@ -51,7 +51,7 @@ class RangerTagsync(Script):
            owner = params.unix_user,
            group = params.unix_group,
            only_if = format("test -e {tagsync_jceks_path}"),
-           mode = 0640
+           mode = 0o640
            )
 
       setup_ranger_xml.update_dot_jceks_crc_ownership(credential_provider_path = params.tagsync_jceks_path, user = params.unix_user, group = params.unix_group)
@@ -65,7 +65,7 @@ class RangerTagsync(Script):
       File(ranger_tagsync_setup_marker,
            owner = params.unix_user,
            group = params.unix_group,
-           mode = 0640
+           mode = 0o640
            )
 
 
@@ -137,7 +137,7 @@ class RangerTagsync(Script):
       owner = params.unix_user,
       group = params.unix_group,
       only_if = format("test -e {atlas_tagsync_jceks_path}"),
-      mode = 0640
+      mode = 0o640
     )
 
     setup_ranger_xml.update_dot_jceks_crc_ownership(credential_provider_path = params.atlas_tagsync_jceks_path, user = params.unix_user, group = params.unix_group)

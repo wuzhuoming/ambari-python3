@@ -6,15 +6,15 @@ if sys.version_info[0] < 3:
     def b(s):
         return s
     try:
-        from cStringIO import StringIO
+        from io import StringIO
     except ImportError:
-        from StringIO import StringIO
+        from io import StringIO
     BytesIO = StringIO
-    text_type = unicode
+    text_type = str
     binary_type = str
-    string_types = (basestring,)
-    integer_types = (int, long)
-    unichr = unichr
+    string_types = (str,)
+    integer_types = (int,)
+    chr = chr
     reload_module = reload
 else:
     PY3 = True
@@ -29,6 +29,6 @@ else:
     binary_type = bytes
     string_types = (str,)
     integer_types = (int,)
-    unichr = chr
+    chr = chr
 
 long_type = integer_types[-1]

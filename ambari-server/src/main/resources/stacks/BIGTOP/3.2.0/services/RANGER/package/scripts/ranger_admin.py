@@ -55,7 +55,7 @@ class RangerAdmin(Script):
       File(ranger_admin_setup_marker,
            owner = params.unix_user,
            group = params.unix_group,
-           mode = 0640
+           mode = 0o640
            )
 
   def stop(self, env, upgrade_type=None):
