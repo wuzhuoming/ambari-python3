@@ -20,14 +20,14 @@ limitations under the License.
 import os
 
 # Local Imports
-from scripts import mysql_users
+import mysql_users
 
 # Ambari Commons & Resource Management Imports
 from resource_management.core.resources.system import Execute
 
 
 def mysql_configure():
-  from scripts import params
+  import params
 
   # required for running hive
   for mysql_configname in params.mysql_confignames:

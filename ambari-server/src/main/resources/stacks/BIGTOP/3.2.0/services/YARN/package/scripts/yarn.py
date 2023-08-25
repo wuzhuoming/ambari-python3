@@ -45,7 +45,7 @@ def yarn(name=None, config_dir=None):
   :param name: Component name, apptimelineserver, nodemanager, resourcemanager, or None (defaults for client)
   :param config_dir: Which config directory to write configs to, which could be different during rolling upgrade.
   """
-  from scripts import params
+  import params
 
   install_lzo_if_needed()
 
@@ -329,7 +329,7 @@ def yarn(name=None, config_dir=None):
   setup_atsv2_backend(name,config_dir)
 
 def setup_historyserver():
-  from scripts import params
+  import params
 
   if params.yarn_log_aggregation_enabled:
     params.HdfsResource(params.yarn_nm_app_log_dir,
@@ -384,7 +384,7 @@ def setup_historyserver():
             )
 
 def setup_nodemanager():
-  from scripts import params
+  import params
 
   # First start after enabling/disabling security
   if params.toggle_nm_security:
@@ -427,7 +427,7 @@ def setup_nodemanager():
     )
 
 def setup_resourcemanager():
-  from scripts import params
+  import params
 
   Directory(params.rm_nodes_exclude_dir,
        mode=0o755,
@@ -465,7 +465,7 @@ def setup_resourcemanager():
     params.HdfsResource(None, action="execute")
 
 def setup_ats():
-  from scripts import params
+  import params
 
   Directory(params.ats_leveldb_dir,
      owner=params.yarn_user,
@@ -520,7 +520,7 @@ def setup_ats():
   params.HdfsResource(None, action="execute")
 
 def create_log_dir(dir_name):
-  from scripts import params
+  import params
   Directory(dir_name,
             create_parents = True,
             cd_access="a",
@@ -532,7 +532,7 @@ def create_log_dir(dir_name):
 
 
 def create_local_dir(dir_name):
-  from scripts import params
+  import params
 
   directory_args = {}
 
@@ -551,7 +551,7 @@ def create_local_dir(dir_name):
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def yarn(name = None):
-  from scripts import params
+  import params
   XmlConfig("mapred-site.xml",
             conf_dir=params.hadoop_conf_dir,
             configurations=params.config['configurations']['mapred-site'],
@@ -708,14 +708,14 @@ def setup_system_services(config_dir=None):
                         action="create_on_execute",
                         owner=params.yarn_hbase_user,
                         group=params.user_group,
-                        mode=0770,
+                        mode=0o770,
                         )
     params.HdfsResource(format("{yarn_hbase_user_version_home}"),
                         type="directory",
                         action="create_on_execute",
                         owner=params.yarn_hbase_user,
                         group=params.user_group,
-                        mode=0770,
+                        mode=0o770,
                         )
     params.HdfsResource(format("{yarn_hbase_user_version_home}/core-site.xml"),
                         type="file",

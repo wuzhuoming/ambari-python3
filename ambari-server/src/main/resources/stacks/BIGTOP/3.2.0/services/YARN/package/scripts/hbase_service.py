@@ -29,7 +29,7 @@ def hbase_service(
   name,
   action = 'start'): # 'start' or 'stop'
 
-    from scripts import params
+    import params
 
     sudo = AMBARI_SUDO_BINARY
     daemon_script = format("{yarn_hbase_bin}/hbase-daemon.sh")
@@ -81,7 +81,7 @@ def hbase(action):
 
 
 def configure_hbase(env):
-    from scripts import params
+    import params
     env.set_params(params)
     params.HdfsResource(params.yarn_hbase_hdfs_root_dir,
                             type="directory",
@@ -91,7 +91,7 @@ def configure_hbase(env):
     params.HdfsResource(None, action="execute")
 
 def create_hbase_package():
-    from scripts import params
+    import params
     file_path = format("{yarn_hbase_package_preparation_file}")
     Logger.info("Executing hbase package creation script file '" + file_path +"'")
     try:
@@ -109,7 +109,7 @@ def create_hbase_package():
         raise
 
 def copy_hbase_package_to_hdfs():
-    from scripts import params
+    import params
 
     try:
 
@@ -138,7 +138,7 @@ def copy_hbase_package_to_hdfs():
 
 
 def createTables():
-    from scripts import params
+    import params
     try:
         Logger.info("Creating HBase tables")
         Execute(format("sleep 10;{yarn_hbase_table_create_cmd}"),

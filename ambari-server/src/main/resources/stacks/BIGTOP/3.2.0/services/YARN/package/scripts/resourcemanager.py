@@ -40,11 +40,11 @@ from resource_management import shell
 from resource_management.core.resources.zkmigrator import ZkMigrator
 from resource_management.libraries.functions import namenode_ha_utils
 
-from scripts.yarn import yarn
-from scripts.service import service
+from yarn import yarn
+from service import service
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
-from scripts.setup_ranger_yarn import setup_ranger_yarn
+from setup_ranger_yarn import setup_ranger_yarn
 
 
 class Resourcemanager(Script):
@@ -52,12 +52,12 @@ class Resourcemanager(Script):
     self.install_packages(env)
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     service('resourcemanager', action='stop')
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     yarn(name='resourcemanager')
 
@@ -69,7 +69,7 @@ class Resourcemanager(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class ResourcemanagerWindows(Resourcemanager):
   def start(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     self.configure(env)
     service('resourcemanager', action='start')
@@ -78,7 +78,7 @@ class ResourcemanagerWindows(Resourcemanager):
     service('resourcemanager', action='status')
 
   def decommission(self, env):
-    from scripts import params
+    import params
 
     env.set_params(params)
     yarn_user = params.yarn_user
@@ -107,14 +107,14 @@ class ResourcemanagerWindows(Resourcemanager):
 class ResourcemanagerDefault(Resourcemanager):
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade post-restart")
-    from scripts import params
+    import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
       stack_select.select_packages(params.version)
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
 
     env.set_params(params)
     self.configure(env) # FOR SECURITY
@@ -129,14 +129,14 @@ class ResourcemanagerDefault(Resourcemanager):
     service('resourcemanager', action='start')
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
 
     env.set_params(status_params)
     check_process_status(status_params.resourcemanager_pid_file)
     pass
 
   def refreshqueues(self, env):
-    from scripts import params
+    import params
 
     self.configure(env)
     env.set_params(params)
@@ -146,7 +146,7 @@ class ResourcemanagerDefault(Resourcemanager):
     )
 
   def decommission(self, env):
-    from scripts import params
+    import params
 
     env.set_params(params)
     rm_kinit_cmd = params.rm_kinit_cmd
@@ -177,7 +177,7 @@ class ResourcemanagerDefault(Resourcemanager):
     pass
 
   def disable_security(self, env):
-    from scripts import params
+    import params
     if not params.stack_supports_zk_security:
       Logger.info("Stack doesn't support zookeeper security")
       return
@@ -195,7 +195,7 @@ class ResourcemanagerDefault(Resourcemanager):
     zkmigrator.delete_node(params.rm_zk_failover_znode)
 
   def wait_for_dfs_directories_created(self, *dirs):
-    from scripts import params
+    import params
 
     ignored_dfs_dirs = HdfsResourceProvider.get_ignored_resources_list(params.hdfs_resource_ignore_file)
 
@@ -213,7 +213,7 @@ class ResourcemanagerDefault(Resourcemanager):
 
   @retry(times=8, sleep_time=20, backoff_factor=1, err_class=Fail)
   def wait_for_dfs_directory_created(self, dir_path, ignored_dfs_dirs):
-    from scripts import params
+    import params
 
 
     if not is_empty(dir_path):
@@ -246,15 +246,15 @@ class ResourcemanagerDefault(Resourcemanager):
         Logger.info("DFS directory '" + dir_path + "' exists.")
 
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.yarn_log_dir
   
   def get_user(self):
-    from scripts import params
+    import params
     return params.yarn_user
 
   def get_pid_files(self):
-    from scripts import status_params
+    import status_params
     return [status_params.resourcemanager_pid_file]
   
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ from ambari_commons.os_family_impl import OsFamilyFuncImpl, OsFamilyImpl
 from ambari_commons import OSConst
 
 def hcat_service_check():
-    from scripts import params
+    import params
     unique = get_unique_id_and_date()
     output_file = format("{hive_apps_whs_dir}/hcatsmoke{unique}")
     test_cmd = format("fs -test -e {output_file}")

@@ -21,7 +21,7 @@ from resource_management.core.exceptions import Fail
 from resource_management.core.logger import Logger
 from resource_management.core.resources import Directory
 from resource_management.core import shell
-from scripts.utils import service
+from utils import service
 import subprocess
 import os
 
@@ -56,7 +56,7 @@ def prepare_rpcbind():
 
 
 def nfsgateway(action=None, format=False):
-  from scripts import params
+  import params
 
   if action== "start":
     prepare_rpcbind()

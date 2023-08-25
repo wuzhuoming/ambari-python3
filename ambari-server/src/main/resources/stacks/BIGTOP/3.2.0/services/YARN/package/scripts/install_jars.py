@@ -23,7 +23,7 @@ import os
 import glob
 
 def install_tez_jars():
-  from scripts import params
+  import params
 
   destination_hdfs_dirs = get_tez_hdfs_dir_paths(params.tez_lib_uris)
 

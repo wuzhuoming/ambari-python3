@@ -39,7 +39,7 @@ class NamenodeHAState:
     Initializes all fields by querying the Namenode state.
     Raises a ValueError if unable to construct the object.
     """
-    from scripts import params
+    import params
 
     self.name_services = default('/configurations/hdfs-site/dfs.internal.nameservices', None)
     if self.name_services is None:

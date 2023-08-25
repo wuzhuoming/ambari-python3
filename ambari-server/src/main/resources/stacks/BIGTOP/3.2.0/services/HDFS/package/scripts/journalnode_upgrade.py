@@ -23,11 +23,11 @@ from resource_management.core.logger import Logger
 from resource_management.core.resources.system import Execute
 from resource_management.libraries.functions.default import default
 from resource_management.core.exceptions import Fail
-from scripts import utils
+import utils
 from resource_management.libraries.functions.jmx import get_value_from_jmx
-from scripts import namenode_ha_state
-from scripts.namenode_ha_state import NAMENODE_STATE, NamenodeHAState
-from scripts.utils import get_dfsadmin_base_command
+import namenode_ha_state
+from namenode_ha_state import NAMENODE_STATE, NamenodeHAState
+from utils import get_dfsadmin_base_command
 
 
 def post_upgrade_check():
@@ -35,7 +35,7 @@ def post_upgrade_check():
   Ensure all journal nodes are up and quorum is established during Rolling Upgrade.
   :return:
   """
-  from scripts import params
+  import params
   Logger.info("Ensuring Journalnode quorum is established")
 
   if params.security_enabled:
@@ -81,7 +81,7 @@ def hdfs_roll_edits():
   Roll the logs so that Namenode will be able to connect to the Journalnode.
   Must kinit before calling this command.
   """
-  from scripts import params
+  import params
 
   # TODO, this will need to be doc'ed since existing clusters will need HDFS_CLIENT on all JOURNALNODE hosts
   dfsadmin_base_command = get_dfsadmin_base_command('hdfs')
@@ -95,7 +95,7 @@ def ensure_jns_have_new_txn(nodelist, last_txn_id):
   :param last_txn_id: Integer of last transaction id
   :return: Return true on success, false otherwise
   """
-  from scripts import params
+  import params
 
   jn_uri = default("/configurations/hdfs-site/dfs.namenode.shared.edits.dir", None)
 

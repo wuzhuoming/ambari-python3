@@ -31,8 +31,8 @@ from resource_management.libraries.functions.format import format
 from resource_management.core.logger import Logger
 from resource_management.core.resources.system import Execute
 
-from scripts.yarn import yarn
-from scripts.service import service
+from yarn import yarn
+from service import service
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 
@@ -42,18 +42,18 @@ class ApplicationTimelineServer(Script):
     self.install_packages(env)
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     self.configure(env) # FOR SECURITY
     service('timelineserver', action='start')
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     service('timelineserver', action='stop')
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     yarn(name='apptimelineserver')
 
@@ -68,27 +68,27 @@ class ApplicationTimelineServerWindows(ApplicationTimelineServer):
 class ApplicationTimelineServerDefault(ApplicationTimelineServer):
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade pre-restart")
-    from scripts import params
+    import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
       stack_select.select_packages(params.version)
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
     check_process_status(status_params.yarn_historyserver_pid_file)
 
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.yarn_log_dir
   
   def get_user(self):
-    from scripts import params
+    import params
     return params.yarn_user
 
   def get_pid_files(self):
-    from scripts import status_params
+    import status_params
     Execute(format("mv {status_params.yarn_historyserver_pid_file_old} {status_params.yarn_historyserver_pid_file}"),
             only_if = format("test -e {status_params.yarn_historyserver_pid_file_old}", user=status_params.yarn_user))
     return [status_params.yarn_historyserver_pid_file]

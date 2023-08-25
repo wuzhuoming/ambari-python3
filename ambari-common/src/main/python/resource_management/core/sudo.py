@@ -145,10 +145,9 @@ if os.geteuid() == 0:
     _create_file(filename, content, encoding=encoding, sudo=False, on_file_created=on_file_created)
 
   def read_file(filename, encoding=None):
-    with open(filename, "rb") as fp:
+    with open(filename, 'rb', encoding=encoding) as fp:
       content = fp.read()
 
-    content = content.decode(encoding) if encoding else content
     return content
 
   def path_exists(path):
@@ -201,7 +200,8 @@ else:
 
   # os.chmod replacement
   def chmod(path, mode):
-    shell.checked_call(["chmod", oct(mode), path], sudo=True)
+    linux_chmod_str = str(oct(mode))[2:]
+    shell.checked_call(["chmod", linux_chmod_str, path], sudo=True)
 
   def chmod_extended(path, mode):
     shell.checked_call(["chmod", mode, path], sudo=True)
@@ -242,10 +242,9 @@ else:
     shell.checked_call(["cp", "-f", filename, tmpf.name], sudo=True)
 
     with tmpf:
-      with open(tmpf.name, "rb") as fp:
+      with open(tmpf.name, 'rb') as fp:
         content = fp.read()
 
-    content = content.decode(encoding) if encoding else content
     return content
 
   # os.path.exists
@@ -327,11 +326,12 @@ def _create_file(filename, content, encoding, sudo, on_file_created=None):
     Creates empty file if content is None.
     """
     content = content if content else ""
-    content = content.encode(encoding) if encoding else content
-
+    # Pre-encoding the string data
+    #write  to specify encoding utf-8
     tmpf_name = tempfile.gettempdir() + os.sep + tempfile.template + str(time.time()) + "_" + str(random.randint(0, 1000))
-    with open(tmpf_name, "wb") as fp:
-      fp.write(content.encode())
+    mode = "wb" if isinstance(content, bytes) else "w"
+    with open(tmpf_name, mode) as fp:
+      fp.write(content)
     if on_file_created:
       on_file_created(tmpf_name)
     shell.checked_call(["mv", "-f", tmpf_name, filename], sudo=sudo)

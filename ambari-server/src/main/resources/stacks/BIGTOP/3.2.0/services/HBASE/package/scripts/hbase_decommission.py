@@ -25,7 +25,7 @@ from ambari_commons import OSConst
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def hbase_decommission(env):
-  from scripts import params
+  import params
 
   env.set_params(params)
 
@@ -44,7 +44,7 @@ def hbase_decommission(env):
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def hbase_decommission(env):
-  from scripts import params
+  import params
 
   env.set_params(params)
   kinit_cmd = params.kinit_cmd_master

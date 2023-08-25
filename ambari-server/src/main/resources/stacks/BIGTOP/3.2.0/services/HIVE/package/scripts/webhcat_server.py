@@ -27,57 +27,57 @@ from resource_management.libraries.functions.security_commons import build_expec
   cached_kinit_executor, get_params_from_filesystem, validate_security_config_properties, \
   FILE_TYPE_XML
 from resource_management.core.logger import Logger
-from scripts.webhcat import webhcat
-from scripts.webhcat_service import webhcat_service
+from webhcat import webhcat
+from webhcat_service import webhcat_service
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 
 
 class WebHCatServer(Script):
   def install(self, env):
-    from scripts import params
+    import params
     self.install_packages(env)
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     self.configure(env) # FOR SECURITY
     webhcat_service(action='start', upgrade_type=upgrade_type)
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     webhcat_service(action='stop')
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     webhcat()
 
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
     check_process_status(status_params.webhcat_pid_file)
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing WebHCat Stack Upgrade pre-restart")
-    from scripts import params
+    import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version): 
       stack_select.select_packages(params.version)
 
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.hcat_log_dir
   
   def get_user(self):
-    from scripts import params
+    import params
     return params.webhcat_user
 
   def get_pid_files(self):
-    from scripts import status_params
+    import status_params
     return [status_params.webhcat_pid_file]
 
 if __name__ == "__main__":

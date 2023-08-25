@@ -38,7 +38,7 @@ from resource_management.libraries.script.script import Script
 from resource_management.libraries.functions.namenode_ha_utils import get_namenode_states
 from resource_management.libraries.functions.show_logs import show_logs
 from ambari_commons.inet_utils import ensure_ssl_using_protocol
-from scripts.zkfc_slave import ZkfcSlaveDefault
+from zkfc_slave import ZkfcSlaveDefault
 
 ensure_ssl_using_protocol(
   Script.get_force_https_protocol_name(),
@@ -74,7 +74,7 @@ def initiate_safe_zkfc_failover():
   If an error occurs, force a failover to happen by killing zkfc on this host. In this case, during the Restart,
   will also have to start ZKFC manually.
   """
-  from scripts import params
+  import params
 
   # Must kinit before running the HDFS command
   if params.security_enabled:
@@ -143,7 +143,7 @@ def kill_zkfc(zkfc_user):
   :param zkfc_user: User that started the ZKFC process.
   :return: Return True if ZKFC was killed, otherwise, false.
   """
-  from scripts import params
+  import params
   if params.dfs_ha_enabled:
     if params.zkfc_pid_file:
       check_process = as_user(format("ls {zkfc_pid_file} > /dev/null 2>&1 && ps -p `cat {zkfc_pid_file}` > /dev/null 2>&1"), user=zkfc_user)
@@ -170,7 +170,7 @@ def service(action=None, name=None, user=None, options="", create_pid_dir=False,
   :param create_pid_dir: Create PID directory
   :param create_log_dir: Crate log file directory
   """
-  from . import params
+  import params
 
   options = options if options else ""
   pid_dir = format("{hadoop_pid_dir_prefix}/{user}")
@@ -228,7 +228,7 @@ def service(action=None, name=None, user=None, options="", create_pid_dir=False,
   if params.security_enabled and name == "datanode":
     ## The directory where pid files are stored in the secure data environment.
     hadoop_secure_dn_pid_dir = format("{hadoop_pid_dir_prefix}/{hdfs_user}")
-    from . import status_params
+    import status_params
     hadoop_secure_dn_pid_file = status_params.datanode_pid_file
     pid_file = hadoop_secure_dn_pid_file
     process_id_exists_command = as_sudo(["test", "-f", pid_file]) + " && " + as_sudo(["pgrep", "-F", pid_file])
@@ -322,7 +322,7 @@ def get_jmx_data(nn_address, modeler_type, metric, encrypted=False, security_ena
   Logger.info("Retrieve modeler: %s, metric: %s from JMX endpoint %s" % (modeler_type, metric, nn_address))
 
   if security_enabled:
-    from scripts import params
+    import params
     data, error_msg, time_millis = curl_krb_request(params.tmp_dir, params.smoke_user_keytab, params.smokeuser_principal, nn_address,
                             "jn_upgrade", params.kinit_path_local, False, None, params.smoke_user)
   else:
@@ -366,7 +366,7 @@ def is_previous_fs_image():
   """
   Return true if there's a previous folder in the HDFS namenode directories.
   """
-  from scripts import params
+  import params
   if params.dfs_name_dir:
     nn_name_dirs = params.dfs_name_dir.split(',')
     for nn_dir in nn_name_dirs:
@@ -381,7 +381,7 @@ def get_hdfs_binary(distro_component_name):
   :param distro_component_name: e.g., hadoop-hdfs-namenode, hadoop-hdfs-datanode
   :return: The hdfs binary to use
   """
-  from scripts import params
+  import params
   hdfs_binary = "hdfs"
 
   return hdfs_binary
@@ -394,7 +394,7 @@ def get_dfsadmin_base_command(hdfs_binary, use_specific_namenode = False):
   current namenode's address
   :return: the constructed dfsadmin base command
   """
-  from scripts import params
+  import params
   dfsadmin_base_command = ""
   if params.dfs_ha_enabled and use_specific_namenode:
     dfsadmin_base_command = format("{hdfs_binary} dfsadmin -fs hdfs://{params.namenode_rpc}")

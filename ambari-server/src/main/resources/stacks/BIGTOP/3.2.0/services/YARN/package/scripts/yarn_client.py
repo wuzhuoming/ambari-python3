@@ -25,7 +25,7 @@ from resource_management.libraries.functions import stack_select
 from resource_management.libraries.functions.constants import StackFeature
 from resource_management.libraries.functions.stack_features import check_stack_feature
 from resource_management.core.exceptions import ClientComponentHasNoStatus
-from scripts.yarn import yarn
+from yarn import yarn
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 
@@ -36,7 +36,7 @@ class YarnClient(Script):
     self.configure(env)
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     yarn()
 
@@ -52,7 +52,7 @@ class YarnClientWindows(YarnClient):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class YarnClientDefault(YarnClient):
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):

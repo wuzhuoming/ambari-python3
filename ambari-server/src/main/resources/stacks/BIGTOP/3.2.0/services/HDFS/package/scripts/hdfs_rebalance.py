@@ -136,7 +136,7 @@ class HdfsLine():
 
 
 def is_balancer_running():
-  from scripts import params
+  import params
   check_balancer_command = "fs -test -e /system/balancer.id"
   does_hdfs_file_exist = False
   try:

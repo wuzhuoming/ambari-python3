@@ -24,7 +24,7 @@ from resource_management.libraries.functions.stack_features import check_stack_f
 from resource_management.libraries.functions.security_commons import build_expectations, \
   cached_kinit_executor, get_params_from_filesystem, validate_security_config_properties, \
   FILE_TYPE_XML
-from scripts.hdfs import hdfs
+from hdfs import hdfs
 from ambari_commons.os_family_impl import OsFamilyImpl
 from ambari_commons import OSConst
 from resource_management.core.exceptions import ClientComponentHasNoStatus
@@ -32,27 +32,27 @@ from resource_management.core.exceptions import ClientComponentHasNoStatus
 class HdfsClient(Script):
 
   def install(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     self.install_packages(env)
     self.configure(env)
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     hdfs()
 
   def save_configs(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     hdfs()
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
   def status(self, env):
@@ -62,7 +62,7 @@ class HdfsClient(Script):
 class HdfsClientDefault(HdfsClient):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
       stack_select.select_packages(params.version)
@@ -70,7 +70,7 @@ class HdfsClientDefault(HdfsClient):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class HdfsClientWindows(HdfsClient):
   def install(self, env):
-    from scripts import install_params
+    import install_params
     self.install_packages(env)
     self.configure(env)
 

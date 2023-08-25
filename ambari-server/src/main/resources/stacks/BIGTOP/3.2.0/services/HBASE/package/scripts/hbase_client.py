@@ -23,20 +23,20 @@ from resource_management.libraries.script.script import Script
 from resource_management.libraries.functions import stack_select
 from resource_management.libraries.functions.constants import StackFeature
 from resource_management.libraries.functions.stack_features import check_stack_feature
-from scripts.hbase import hbase
+from hbase import hbase
 from ambari_commons import OSCheck, OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 from resource_management.core.exceptions import ClientComponentHasNoStatus
 
 class HbaseClient(Script):
   def install(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     self.install_packages(env)
     self.configure(env)
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     hbase(name='client')
 
@@ -52,7 +52,7 @@ class HbaseClientWindows(HbaseClient):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class HbaseClientDefault(HbaseClient):
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version): 

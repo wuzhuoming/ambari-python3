@@ -144,8 +144,6 @@ class CloseControlMessage(Message):
         if code:
             data += struct.pack("!H", code)
         if reason is not None:
-            if isinstance(reason, str):
-                reason = reason.encode('utf-8')
             data += reason
 
         Message.__init__(self, OPCODE_CLOSE, data, 'utf-8')

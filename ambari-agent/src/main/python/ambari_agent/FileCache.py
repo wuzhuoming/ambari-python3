@@ -228,7 +228,7 @@ class FileCache():
     """
     logger.debug("Trying to download {0}".format(url))
     try:
-      memory_buffer = io.StringIO()
+      memory_buffer = io.BytesIO()
       proxy_handler = urllib.request.ProxyHandler({})
       opener = urllib.request.build_opener(proxy_handler)
       u = opener.open(url, timeout=self.SOCKET_TIMEOUT)
@@ -263,7 +263,7 @@ class FileCache():
     """
     hash_file = os.path.join(directory, self.HASH_SUM_FILE)
     try:
-      with open(hash_file, "w") as fh:
+      with open(hash_file, "wb") as fh:
         fh.write(new_hash)
       os.chmod(hash_file, 0o644)
     except Exception as err:

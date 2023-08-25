@@ -359,7 +359,7 @@ def queue_reader(cmd, q, timeout, timer):
   def _reader():
     try:
       while True:
-        data_chunk = cmd.stdout.readline()
+        data_chunk = cmd.stdout.readline().decode()
         """
         data_chunk could be:
         

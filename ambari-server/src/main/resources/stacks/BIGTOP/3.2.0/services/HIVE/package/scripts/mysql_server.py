@@ -23,9 +23,9 @@ import sys
 import os
 
 # Local Imports
-from scripts import mysql_users
-from scripts.mysql_service import mysql_service
-from scripts.mysql_utils import mysql_configure
+import mysql_users
+from mysql_service import mysql_service
+from mysql_utils import mysql_configure
 
 # Ambari Commons & Resource Management Imports
 from resource_management.libraries.script.script import Script
@@ -33,32 +33,32 @@ from resource_management.libraries.script.script import Script
 
 class MysqlServer(Script):
   def install(self, env):
-    from scripts import params
+    import params
     self.install_packages(env)
     self.configure(env)
 
   def clean(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     mysql_users.mysql_deluser()
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     mysql_configure()
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     mysql_service(action='start')
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     mysql_service(action='stop')
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
 
     mysql_service(action='status')

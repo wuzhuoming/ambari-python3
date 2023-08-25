@@ -36,8 +36,8 @@ from resource_management.core.logger import Logger
 from resource_management.libraries.functions.check_process_status import check_process_status
 from resource_management.libraries.functions.format import format
 from resource_management.libraries.functions.validate import call_and_match_output
-from scripts.zookeeper import zookeeper
-from scripts.zookeeper_service import zookeeper_service
+from zookeeper import zookeeper
+from zookeeper_service import zookeeper_service
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 
@@ -45,18 +45,18 @@ from ambari_commons.os_family_impl import OsFamilyImpl
 class ZookeeperServer(Script):
 
   def configure(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     zookeeper(type='server', upgrade_type=upgrade_type)
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     self.configure(env, upgrade_type=upgrade_type)
     zookeeper_service(action='start', upgrade_type=upgrade_type)
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     zookeeper_service(action='stop', upgrade_type=upgrade_type)
 
@@ -69,7 +69,7 @@ class ZookeeperServerLinux(ZookeeperServer):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade pre-restart")
-    from scripts import params
+    import params
     env.set_params(params)
 
     if check_stack_feature(StackFeature.ROLLING_UPGRADE, format_stack_version(params.version)):
@@ -81,7 +81,7 @@ class ZookeeperServerLinux(ZookeeperServer):
       return
 
     Logger.info("Executing Stack Upgrade post-restart")
-    from scripts import params
+    import params
     env.set_params(params)
     zk_server_host = random.choice(params.zookeeper_hosts)
     cli_shell = format("{zk_cli_shell} -server {zk_server_host}:{client_port}")
@@ -103,20 +103,20 @@ class ZookeeperServerLinux(ZookeeperServer):
         Logger.info(out)
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
     check_process_status(status_params.zk_pid_file)
       
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.zk_log_dir
   
   def get_user(self):
-    from scripts import params
+    import params
     return params.zk_user
 
   def get_pid_files(self):
-    from scripts import status_params
+    import status_params
     return [status_params.zk_pid_file]
 
 
@@ -124,14 +124,14 @@ class ZookeeperServerLinux(ZookeeperServer):
 class ZookeeperServerWindows(ZookeeperServer):
   def install(self, env):
     from resource_management.libraries.functions.windows_service_utils import check_windows_service_exists
-    from scripts import params
+    import params
     if not check_windows_service_exists(params.zookeeper_win_service_name):
       self.install_packages(env)
     self.configure(env)
 
   def status(self, env):
     from resource_management.libraries.functions.windows_service_utils import check_windows_service_status
-    from scripts import status_params
+    import status_params
     check_windows_service_status(status_params.zookeeper_win_service_name)
 
 if __name__ == "__main__":

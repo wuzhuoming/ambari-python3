@@ -26,7 +26,7 @@ from resource_management.libraries.functions import format
 from resource_management.libraries.functions.decorator import retry
 from resource_management.libraries.functions import check_process_status
 from resource_management.core import ComponentIsNotRunning
-from scripts.utils import get_dfsadmin_base_command
+from utils import get_dfsadmin_base_command
 
 
 def pre_rolling_upgrade_shutdown(hdfs_binary):
@@ -38,7 +38,7 @@ def pre_rolling_upgrade_shutdown(hdfs_binary):
   :param hdfs_binary: name/path of the HDFS binary to use
   :return: Return True if ran ok (even with errors), and False if need to stop the datanode forcefully.
   """
-  from scripts import params
+  import params
 
   Logger.info('DataNode executing "shutdownDatanode" command in preparation for upgrade...')
   if params.security_enabled:
@@ -63,7 +63,7 @@ def post_upgrade_check(hdfs_binary):
   :param hdfs_binary: name/path of the HDFS binary to use
   :return:
   """
-  from scripts import params
+  import params
 
   Logger.info("Checking that the DataNode has rejoined the cluster after upgrade...")
   if params.security_enabled:
@@ -74,7 +74,7 @@ def post_upgrade_check(hdfs_binary):
 
 
 def is_datanode_process_running():
-  from scripts import params
+  import params
   try:
     check_process_status(params.datanode_pid_file)
     return True
@@ -97,7 +97,7 @@ def _check_datanode_startup(hdfs_binary):
     Logger.info("DataNode process is not running")
     raise Fail("DataNode process is not running")
 
-  from scripts import params
+  import params
   import socket
 
   try:

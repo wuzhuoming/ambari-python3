@@ -66,7 +66,7 @@ class TestPythonExecutor(TestCase):
     thread.start()
     time.sleep(0.1)
     subproc_mock.finished_event.wait()
-    self.assertEqual(subproc_mock.was_terminated, True, "subprocess32 should be terminated due to timeout")
+    self.assertEqual(subproc_mock.was_terminated, True, "subprocess should be terminated due to timeout")
     self.assertTrue(callback_method.called)
 
 
@@ -100,8 +100,8 @@ class TestPythonExecutor(TestCase):
     time.sleep(0.1)
     subproc_mock.should_finish_event.set()
     subproc_mock.finished_event.wait()
-    self.assertEqual(subproc_mock.was_terminated, False, "subprocess32 should not be terminated before timeout")
-    self.assertEqual(subproc_mock.returncode, 0, "subprocess32 should not be terminated before timeout")
+    self.assertEqual(subproc_mock.was_terminated, False, "subprocess should not be terminated before timeout")
+    self.assertEqual(subproc_mock.returncode, 0, "subprocess should not be terminated before timeout")
     self.assertTrue(callback_method.called)
 
   @patch.object(OSCheck, "os_distribution", new = MagicMock(return_value = os_distro_value))

@@ -21,7 +21,7 @@ Ambari Agent
 from ambari_commons import OSCheck
 
 if OSCheck.is_windows_family():
-  from scripts.params_windows import *
+  from params_windows import *
 else:
-  from scripts.params_linux import *
+  from params_linux import *
 

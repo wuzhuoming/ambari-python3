@@ -34,7 +34,7 @@ def run_migration(env, upgrade_type):
   :param env: Environment.
   :param upgrade_type: "rolling" or "nonrolling
   """
-  from scripts import params
+  import params
 
   if upgrade_type is None:
     raise Fail('Parameter "upgrade_type" is missing.')

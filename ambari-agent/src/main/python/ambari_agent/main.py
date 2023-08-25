@@ -28,6 +28,7 @@ import locale
 import platform
 import configparser
 import resource
+import signal
 from logging.handlers import SysLogHandler
 from ambari_agent import AmbariConfig
 from ambari_agent.NetUtil import NetUtil

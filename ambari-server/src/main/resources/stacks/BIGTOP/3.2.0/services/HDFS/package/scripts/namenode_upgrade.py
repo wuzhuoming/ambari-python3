@@ -28,9 +28,9 @@ from resource_management.core.exceptions import Fail
 from resource_management.libraries.functions.format import format
 from resource_management.libraries.functions import get_unique_id_and_date
 from resource_management.libraries.functions import Direction, SafeMode
-from scripts.utils import get_dfsadmin_base_command
+from utils import get_dfsadmin_base_command
 
-from scripts.namenode_ha_state import NamenodeHAState
+from namenode_ha_state import NamenodeHAState
 
 
 safemode_to_instruction = {SafeMode.ON: "enter",
@@ -43,7 +43,7 @@ def prepare_upgrade_check_for_previous_dir():
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires backing up some data.
   Check that there is no "previous" folder inside the NameNode Name Dir.
   """
-  from scripts import params
+  import params
 
   if params.dfs_ha_enabled:
     namenode_ha = NamenodeHAState()
@@ -72,7 +72,7 @@ def prepare_upgrade_enter_safe_mode(hdfs_binary):
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires first entering Safemode.
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  from scripts import params
+  import params
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
   safe_mode_enter_cmd = dfsadmin_base_command + " -safemode enter"
@@ -93,7 +93,7 @@ def prepare_upgrade_save_namespace(hdfs_binary):
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires saving the namespace.
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  from scripts import params
+  import params
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
   save_namespace_cmd = dfsadmin_base_command + " -saveNamespace"
@@ -109,7 +109,7 @@ def prepare_upgrade_backup_namenode_dir():
   """
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires backing up the NameNode Name Dirs.
   """
-  from scripts import params
+  import params
 
   i = 0
   failed_paths = []
@@ -142,7 +142,7 @@ def prepare_upgrade_finalize_previous_upgrades(hdfs_binary):
   During a NonRolling (aka Express Upgrade), preparing the NameNode requires Finalizing any upgrades that are in progress.
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  from scripts import params
+  import params
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
   finalize_command = dfsadmin_base_command + " -rollingUpgrade finalize"
@@ -170,7 +170,7 @@ def reach_safemode_state(user, safemode_state, in_ha, hdfs_binary):
   success will be True
   """
   Logger.info("Prepare to transition into safemode state %s" % safemode_state)
-  from scripts import params
+  import params
   original_state = SafeMode.UNKNOWN
 
   dfsadmin_base_command = get_dfsadmin_base_command(hdfs_binary)
@@ -218,7 +218,7 @@ def prepare_rolling_upgrade(hdfs_binary):
   3. Execute a rolling upgrade "query"
   :param hdfs_binary: name/path of the HDFS binary to use
   """
-  from scripts import params
+  import params
 
   if not params.upgrade_direction or params.upgrade_direction not in [Direction.UPGRADE, Direction.DOWNGRADE]:
     raise Fail("Could not retrieve upgrade direction: %s" % str(params.upgrade_direction))
@@ -253,7 +253,7 @@ def finalize_upgrade(upgrade_type, hdfs_binary):
   :param hdfs_binary: name/path of the HDFS binary to use
   """
   Logger.info("Executing Rolling Upgrade finalize")
-  from scripts import params
+  import params
 
   if params.security_enabled:
     kinit_command = format("{params.kinit_path_local} -kt {params.hdfs_user_keytab} {params.hdfs_principal_name}") 

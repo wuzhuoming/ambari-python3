@@ -34,7 +34,7 @@ from ambari_commons.os_family_impl import OsFamilyFuncImpl, OsFamilyImpl
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def zookeeper(type = None, upgrade_type=None):
-  from scripts import params
+  import params
 
   Directory(params.config_dir,
             owner=params.zk_user,
@@ -110,7 +110,7 @@ def zookeeper(type = None, upgrade_type=None):
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def zookeeper(type = None, upgrade_type=None):
-  from scripts import params
+  import params
   configFile("zoo.cfg", template_name="zoo.cfg.j2", mode="f")
   configFile("configuration.xsl", template_name="configuration.xsl.j2", mode="f")
 
@@ -145,7 +145,7 @@ def zookeeper(type = None, upgrade_type=None):
     )
 
 def configFile(name, template_name=None, mode=None):
-  from scripts import params
+  import params
 
   File(os.path.join(params.config_dir, name),
        content=Template(template_name),

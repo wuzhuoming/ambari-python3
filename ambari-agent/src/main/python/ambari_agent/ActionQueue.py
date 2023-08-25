@@ -105,11 +105,11 @@ class ActionQueue(threading.Thread):
       reason = command['reason']
 
       # Remove from the command queue by task_id
-      queue = self.commandQueue
+      tmp_queue = self.commandQueue
       self.commandQueue = queue.Queue()
 
-      while not queue.empty():
-        queued_command = queue.get(False)
+      while not tmp_queue.empty():
+        queued_command = tmp_queue.get(False)
         if queued_command['taskId'] != task_id:
           self.commandQueue.put(queued_command)
         else:

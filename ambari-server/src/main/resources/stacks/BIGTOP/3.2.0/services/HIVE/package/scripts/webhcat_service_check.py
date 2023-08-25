@@ -30,7 +30,7 @@ from ambari_commons import OSConst
 import time
 
 def webhcat_service_check():
-  from scripts import params
+  import params
   File(format("{tmp_dir}/templetonSmoke.sh"),
        content= StaticFile('templetonSmoke.sh'),
        mode=0o755

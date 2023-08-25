@@ -37,7 +37,7 @@ from resource_management.libraries.functions.stack_features import check_stack_f
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def hbase(name=None):
-  from scripts import params
+  import params
   XmlConfig("hbase-site.xml",
             conf_dir = params.hbase_conf_dir,
             configurations = params.config['configurations']['hbase-site'],
@@ -55,7 +55,7 @@ def hbase(name=None):
 # name is 'master' or 'regionserver' or 'queryserver' or 'client'
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def hbase(name=None):
-  from scripts import params
+  import params
 
   # ensure that matching LZO libraries are installed for HBase
   lzo_utils.install_lzo_if_needed()
@@ -244,7 +244,7 @@ def hbase(name=None):
             retry_count=params.agent_stack_retry_count)
 
 def hbase_TemplateConfig(name, tag=None):
-  from scripts import params
+  import params
 
   TemplateConfig( format("{hbase_conf_dir}/{name}"),
       owner = params.hbase_user,

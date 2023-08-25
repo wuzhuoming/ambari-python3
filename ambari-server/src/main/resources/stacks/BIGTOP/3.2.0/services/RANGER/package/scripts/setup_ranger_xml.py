@@ -55,7 +55,7 @@ def ranger(name=None, upgrade_type=None):
     setup_tagsync(upgrade_type=upgrade_type)
 
 def setup_ranger_admin(upgrade_type=None):
-  from scripts import params
+  import params
 
   if upgrade_type is None:
     upgrade_type = Script.get_upgrade_type(default("/commandParams/upgrade_type", ""))

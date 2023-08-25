@@ -50,7 +50,7 @@ class RepositoryProvider(Provider):
           repo_file_content = repo_file_content.strip()
 
           File(tmpf.name,
-               content=repo_file_content,
+               content=repo_file_content.encode(),
                owner=os_utils.current_user(),
           )
 

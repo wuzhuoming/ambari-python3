@@ -23,7 +23,7 @@ from resource_management.libraries.functions.format import format
 from resource_management.core.resources.system import Execute, File
 from resource_management.core.source import StaticFile
 from resource_management.core.source import Template
-from scripts import functions
+import functions
 from ambari_commons import OSCheck, OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 
@@ -35,7 +35,7 @@ class HbaseServiceCheck(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class HbaseServiceCheckWindows(HbaseServiceCheck):
   def service_check(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     smoke_cmd = os.path.join(params.stack_root, "Run-SmokeTests.cmd")
     service = "HBASE"
@@ -45,7 +45,7 @@ class HbaseServiceCheckWindows(HbaseServiceCheck):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class HbaseServiceCheckDefault(HbaseServiceCheck):
   def service_check(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     
     output_file = "/apps/hbase/data/ambarismoketest"

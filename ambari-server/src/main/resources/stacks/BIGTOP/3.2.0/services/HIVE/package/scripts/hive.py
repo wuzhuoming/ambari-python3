@@ -48,7 +48,7 @@ from resource_management.libraries.functions.lzo_utils import install_lzo_if_nee
 
 
 def hive(name=None):
-  from scripts import params
+  import params
 
   install_lzo_if_needed()
 
@@ -121,7 +121,7 @@ def hive(name=None):
     setup_metastore()
 
 def setup_hiveserver2():
-  from scripts import params
+  import params
 
   File(params.start_hiveserver2_path,
        mode=0o755,
@@ -213,7 +213,7 @@ def setup_hiveserver2():
   generate_logfeeder_input_config('hive', Template("input.config-hive.json.j2", extra_imports=[default]))
 
 def create_hive_hdfs_dirs():
-  from scripts import params
+  import params
 
   # Create webhcat dirs.
   if params.hcat_hdfs_user_dir != params.webhcat_hdfs_user_dir:
@@ -286,7 +286,7 @@ def create_hive_hdfs_dirs():
   params.HdfsResource(None, action = "execute")
 
 def __is_hdfs_acls_enabled():
-  from scripts import params
+  import params
   
   hdfs_protocol = params.fs_root.startswith("hdfs://")
   
@@ -300,7 +300,7 @@ def __is_hdfs_acls_enabled():
   return hdfs_protocol and acls_enabled and acls_inheritance_enabled
 
 def setup_non_client():
-  from scripts import params
+  import params
 
   Directory(params.hive_pid_dir,
             create_parents = True,
@@ -323,7 +323,7 @@ def setup_non_client():
 
 
 def setup_metastore():
-  from scripts import params
+  import params
 
   if params.hive_metastore_site_supported:
     hivemetastore_site_config = get_config("hivemetastore-site")
@@ -335,7 +335,7 @@ def setup_metastore():
                 owner=params.hive_user,
                 group=params.user_group,
                 mode=0o600)
-  File(os.path.join(params.hive_server_conf_dir, "hadoop-metrics2-hivemetastore.properties"),
+  File(os.path.join(params.hive_conf_dir, "hadoop-metrics2-hivemetastore.properties"),
        owner=params.hive_user,
        group=params.user_group,
        content=Template("hadoop-metrics2-hivemetastore.properties.j2"),
@@ -366,7 +366,7 @@ def setup_metastore():
   generate_logfeeder_input_config('hive', Template("input.config-hive.json.j2", extra_imports=[default]))
 
 def refresh_yarn():
-  from scripts import params
+  import params
 
   if params.enable_ranger_hive or not params.doAs:
     return
@@ -383,7 +383,7 @@ def refresh_yarn():
   Execute("touch " + YARN_REFRESHED_FILE, user = "root")
 
 def create_hive_metastore_schema():
-  from scripts import params
+  import params
   
   SYS_DB_CREATED_FILE = "/etc/hive/sys.db.created"
 
@@ -434,7 +434,7 @@ def create_hive_metastore_schema():
     Logger.error(traceback.format_exc())
 
 def create_metastore_schema():
-  from scripts import params
+  import params
 
   if params.sysprep_skip_hive_schema_create:
     Logger.info("Skipping creation of Hive Metastore schema as host is sys prepped")
@@ -470,7 +470,7 @@ def create_metastore_schema():
 Writes configuration files required by Hive.
 """
 def fill_conf_dir(component_conf_dir):
-  from scripts import params
+  import params
   # hive_client_conf_path = os.path.realpath(format("{stack_root}/current/{component_directory}/conf"))
   component_conf_dir = os.path.realpath(component_conf_dir)
   # mode_identified_for_file = 0644 if component_conf_dir == hive_client_conf_path else 0600
@@ -569,7 +569,7 @@ def jdbc_connector(target, hive_previous_jdbc_jar):
   Shared by Hive Batch, Hive Metastore, and Hive Interactive
   :param target: Target of jdbc jar name, which could be for any of the components above.
   """
-  from scripts import params
+  import params
 
   if not params.jdbc_jar_name:
     return

@@ -27,7 +27,7 @@ from resource_management.libraries.functions.format import format
 
 
 def setup_ranger_hdfs(upgrade_type=None):
-  from scripts import params
+  import params
 
   if params.enable_ranger_hdfs:
 
@@ -95,7 +95,7 @@ def setup_ranger_hdfs(upgrade_type=None):
     Logger.info('Ranger Hdfs plugin is not enabled')
 
 def create_ranger_audit_hdfs_directories():
-  from scripts import params
+  import params
 
   if params.enable_ranger_hdfs and params.xml_configurations_supported and params.xa_audit_hdfs_is_enabled:
     params.HdfsResource("/ranger/audit",

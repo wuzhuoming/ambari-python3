@@ -32,7 +32,7 @@ class ZookeeperServiceCheck(Script):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class ZookeeperServiceCheckLinux(ZookeeperServiceCheck):
   def service_check(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
 
     File(format("{zk_log_dir}/zookeeper.log"),
@@ -71,7 +71,7 @@ class ZookeeperServiceCheckLinux(ZookeeperServiceCheck):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class ZookeeperServiceCheckWindows(ZookeeperServiceCheck):
   def service_check(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
 
     smoke_cmd = os.path.join(params.stack_root,"Run-SmokeTests.cmd")

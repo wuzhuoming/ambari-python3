@@ -36,7 +36,7 @@ class RangerUsersync(Script):
     self.install_packages(env)
 
   def initialize(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     ranger_ugsync_setup_marker = os.path.join(params.ranger_ugsync_conf, "usersync_setup")
     if not os.path.exists(ranger_ugsync_setup_marker):
@@ -57,20 +57,20 @@ class RangerUsersync(Script):
 
 
   def configure(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     self.initialize(env)
     setup_ranger_xml.ranger('ranger_usersync', upgrade_type=upgrade_type)
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     self.configure(env, upgrade_type=upgrade_type)
     ranger_service('ranger_usersync')
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     Execute(format('{params.usersync_stop}'), environment={'JAVA_HOME': params.java_home}, user=params.unix_user)
@@ -96,12 +96,12 @@ class RangerUsersync(Script):
     pass
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     upgrade.prestart(env)
 
   def post_upgrade_restart(self, env, upgrade_type = None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     if upgrade_type and params.upgrade_direction == Direction.UPGRADE and not params.stack_supports_multiple_env_sh_files:
@@ -112,11 +112,11 @@ class RangerUsersync(Script):
         )
 
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.usersync_log_dir
 
   def get_user(self):
-    from scripts import params
+    import params
     return params.unix_user
 
   def get_pid_files(self):

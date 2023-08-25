@@ -23,7 +23,7 @@ from resource_management.libraries.functions.show_logs import show_logs
 from resource_management.core.resources.system import Execute
 
 def ranger_service(name, action=None):
-  from scripts import params
+  import params
 
   env_dict = {'JAVA_HOME': params.java_home}
   if params.db_flavor.lower() == 'sqla':

@@ -19,7 +19,7 @@ limitations under the License.
 """
 
 import os
-from scripts import status_params
+import status_params
 from resource_management.libraries.script.script import Script
 
 # server configurations

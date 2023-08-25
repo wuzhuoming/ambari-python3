@@ -462,7 +462,7 @@ def updateConfigServerHostname(configFile, new_hosts):
     if not isSameHostList(server_hosts, new_host_names):
       print("Updating server hostname from " + server_hosts + " to " + new_hosts)
       agent_config.set('server', 'hostname', new_hosts)
-      with (open(configFile, "wb")) as new_agent_config:
+      with (open(configFile, "w")) as new_agent_config:
         agent_config.write(new_agent_config)
 
 def main():

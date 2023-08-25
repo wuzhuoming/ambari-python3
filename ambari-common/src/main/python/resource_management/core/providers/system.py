@@ -160,7 +160,7 @@ class FileProvider(Provider):
     content = self.resource.content
     if content is None:
       return None
-    elif isinstance(content, str):
+    elif isinstance(content, str) or isinstance(content, bytes):
       return content
     elif hasattr(content, "__call__"):
       return content()

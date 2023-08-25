@@ -28,7 +28,7 @@ import os
 class RangerServiceCheck(Script):
 
   def service_check(self, env):
-    from scripts import params
+    import params
 
     env.set_params(params)
     self.check_ranger_admin_service(params.ranger_external_url, params.upgrade_marker_file)

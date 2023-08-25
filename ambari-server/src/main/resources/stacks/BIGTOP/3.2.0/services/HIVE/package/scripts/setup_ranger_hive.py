@@ -26,7 +26,7 @@ from resource_management.libraries.functions.setup_ranger_plugin_xml import gene
 from resource_management.libraries.functions.setup_ranger_plugin_xml import setup_ranger_plugin
 
 def setup_ranger_hive(upgrade_type = None):
-  from scripts import params
+  import params
 
   if params.enable_ranger_hive:
 
@@ -90,7 +90,7 @@ def setup_ranger_hive_metastore_service():
   """
   Creates ranger hive service in ranger admin installed in same cluster for cluster depolyed in cloud env.
   """
-  from scripts import params
+  import params
 
   if params.has_ranger_admin and params.ranger_hive_metastore_lookup:
 

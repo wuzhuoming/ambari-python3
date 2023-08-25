@@ -710,7 +710,7 @@ class DefaultStackAdvisor(StackAdvisor):
 
     if path is not None and os.path.exists(path) and class_name is not None:
       try:
-        with open(path, 'rb') as fp:
+        with open(path, 'r') as fp:
           service_advisor = imp.load_module('service_advisor_impl', fp, path, ('.py', 'rb', imp.PY_SOURCE))
 
           # Find the class name by reading from all of the available attributes of the python file.

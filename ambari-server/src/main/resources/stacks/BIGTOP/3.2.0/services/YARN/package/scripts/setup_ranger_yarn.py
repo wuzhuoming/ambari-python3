@@ -17,7 +17,7 @@ limitations under the License.
 from resource_management.core.logger import Logger
 
 def setup_ranger_yarn():
-  from scripts import params
+  import params
 
   if params.enable_ranger_yarn:
 

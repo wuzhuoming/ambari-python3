@@ -47,7 +47,7 @@ class ServiceCheck(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class ServiceCheckWindows(ServiceCheck):
     def service_check(self, env):
-        from scripts import params
+        import params
         env.set_params(params)
 
         yarn_exe = os_utils.quote_path(os.path.join(params.yarn_home, "bin", "yarn.cmd"))
@@ -89,7 +89,7 @@ class ServiceCheckWindows(ServiceCheck):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class ServiceCheckDefault(ServiceCheck):
     def service_check(self, env):
-        from scripts import params
+        import params
         env.set_params(params)
 
         params.HdfsResource(format("/user/{smokeuser}"),

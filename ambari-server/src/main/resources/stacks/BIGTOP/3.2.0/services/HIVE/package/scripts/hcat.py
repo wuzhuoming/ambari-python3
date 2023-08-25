@@ -34,7 +34,7 @@ from ambari_commons.constants import SERVICE
 
 
 def hcat():
-  from scripts import params
+  import params
 
   Directory(params.hive_conf_dir,
             create_parents = True,

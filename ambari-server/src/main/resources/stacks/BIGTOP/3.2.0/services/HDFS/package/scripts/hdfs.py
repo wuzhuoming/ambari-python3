@@ -36,7 +36,7 @@ from resource_management.libraries.functions.lzo_utils import install_lzo_if_nee
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def hdfs(name=None):
-  from scripts import params
+  import params
 
   if params.create_lib_snappy_symlinks:
     install_snappy()
@@ -146,7 +146,7 @@ def hdfs(name=None):
   install_lzo_if_needed()
       
 def install_snappy():
-  from scripts import params
+  import params
   Directory([params.so_target_dir_x86, params.so_target_dir_x64],
             create_parents = True,
   )    
@@ -172,7 +172,7 @@ class ConfigStatusParser():
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def reconfig(componentName, componentAddress):
-    from scripts import params
+    import params
 
     if params.security_enabled:
         Execute(params.nn_kinit_cmd,
@@ -205,7 +205,7 @@ def reconfig(componentName, componentAddress):
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def hdfs(component=None):
-  from scripts import params
+  import params
   if component == "namenode":
     directories = params.dfs_name_dir.split(",")
     Directory(directories,

@@ -36,7 +36,7 @@ from ambari_commons.constants import SERVICE
 
 
 def webhcat():
-  from scripts import params
+  import params
 
   Directory(params.templeton_pid_dir,
             owner=params.webhcat_user,

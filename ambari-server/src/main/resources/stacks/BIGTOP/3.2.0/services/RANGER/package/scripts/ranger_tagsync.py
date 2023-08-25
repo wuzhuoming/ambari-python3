@@ -40,7 +40,7 @@ class RangerTagsync(Script):
 
 
   def initialize(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     ranger_tagsync_setup_marker = os.path.join(params.ranger_tagsync_conf, "tagsync_setup")
     if not os.path.exists(ranger_tagsync_setup_marker):
@@ -70,20 +70,20 @@ class RangerTagsync(Script):
 
 
   def configure(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     self.initialize(env)
     setup_ranger_xml.ranger('ranger_tagsync', upgrade_type=upgrade_type)
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     self.configure(env, upgrade_type=upgrade_type)
     ranger_service('ranger_tagsync')
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     Execute(format('{tagsync_services_file} stop'), environment={'JAVA_HOME': params.java_home}, user=params.unix_user)
@@ -98,7 +98,7 @@ class RangerTagsync(Script):
     check_process_status(status_params.tagsync_pid_file)
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     if params.stack_supports_ranger_tagsync:
@@ -106,7 +106,7 @@ class RangerTagsync(Script):
       stack_select.select_packages(params.version)
 
   def post_upgrade_restart(self, env, upgrade_type = None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     if upgrade_type and params.upgrade_direction == Direction.UPGRADE and not params.stack_supports_multiple_env_sh_files:
@@ -117,11 +117,11 @@ class RangerTagsync(Script):
         )
 
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.tagsync_log_dir
 
   def get_user(self):
-    from scripts import params
+    import params
     return params.unix_user
 
   def get_pid_files(self):
@@ -129,7 +129,7 @@ class RangerTagsync(Script):
     return [status_params.tagsync_pid_file]
 
   def create_atlas_user_keystore(self,env):
-    from scripts import params
+    import params
     env.set_params(params)
 
     setup_ranger_xml.ranger_credential_helper(params.tagsync_cred_lib, 'atlas.user.password', params.atlas_admin_password, params.atlas_tagsync_jceks_path)

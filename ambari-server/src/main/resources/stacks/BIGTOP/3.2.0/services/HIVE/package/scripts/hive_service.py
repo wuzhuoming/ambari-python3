@@ -41,8 +41,8 @@ from resource_management.libraries.functions.stack_features import check_stack_f
 
 def hive_service(name, action='start', upgrade_type=None):
 
-  from scripts import params
-  from scripts import status_params
+  import params
+  import status_params
 
   if name == 'metastore':
     pid_file = status_params.hive_metastore_pid
@@ -137,7 +137,7 @@ def hive_service(name, action='start', upgrade_type=None):
     )
 
 def validate_connection(target_path_to_jdbc, hive_lib_path):
-  from scripts import params
+  import params
 
   path_to_jdbc = target_path_to_jdbc
   if not params.jdbc_jar_name:
@@ -161,7 +161,7 @@ def validate_connection(target_path_to_jdbc, hive_lib_path):
 
 
 def check_fs_root(conf_dir, execution_path):
-  from scripts import params
+  import params
 
   if not params.fs_root.startswith("hdfs://"):
     Logger.info("Skipping fs root check as fs_root does not start with hdfs://")
@@ -182,8 +182,8 @@ def check_fs_root(conf_dir, execution_path):
 
 @retry(times=30, sleep_time=10, err_class=Fail)
 def wait_for_znode():
-  from scripts import params
-  from scripts import status_params
+  import params
+  import status_params
   
   try:
     check_process_status(status_params.hive_pid)

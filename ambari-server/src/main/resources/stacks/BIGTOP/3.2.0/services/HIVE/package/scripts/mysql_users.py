@@ -22,12 +22,12 @@ limitations under the License.
 from resource_management.core.resources.system import Execute, File
 from resource_management.core.source import StaticFile
 from resource_management.libraries.functions.format import format
-from scripts.mysql_service import get_daemon_name
+from mysql_service import get_daemon_name
 
 
 # Used to add hive access to the needed components
 def mysql_adduser():
-  from scripts import params
+  import params
   
   File(params.mysql_adduser_path,
        mode=0o755,
@@ -53,7 +53,7 @@ def mysql_adduser():
 
 # Removes hive access from components
 def mysql_deluser():
-  from scripts import params
+  import params
   
   File(params.mysql_deluser_path,
        mode=0o755,

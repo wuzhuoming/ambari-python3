@@ -26,7 +26,7 @@ from resource_management.core.resources.system import Execute
 class HbaseMasterUpgrade(Script):
 
   def take_snapshot(self, env):
-    from scripts import params
+    import params
 
     snap_cmd = "echo 'snapshot_all' | {0} shell".format(params.hbase_cmd)
 
@@ -35,7 +35,7 @@ class HbaseMasterUpgrade(Script):
     Execute(exec_cmd, user=params.hbase_user)
 
   def restore_snapshot(self, env):
-    from scripts import params
+    import params
     print("TODO AMBARI-12698")
 
 if __name__ == "__main__":

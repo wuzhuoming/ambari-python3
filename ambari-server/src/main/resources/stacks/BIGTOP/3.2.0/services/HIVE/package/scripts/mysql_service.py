@@ -26,7 +26,7 @@ from resource_management.libraries.functions.format import format
 
 
 def get_daemon_name():
-  from scripts import status_params
+  import status_params
 
   for service_file_template in status_params.SERVICE_FILE_TEMPLATES:
     for possible_daemon_name in status_params.POSSIBLE_DAEMON_NAMES:
@@ -48,14 +48,14 @@ def mysql_service(action='start'):
     except Fail:
       raise ComponentIsNotRunning()
   elif action == 'stop':
-    from scripts import params
+    import params
     Execute(cmd,
             logoutput = True,
             only_if = status_cmd,
             sudo = True,
     )
   elif action == 'start':
-    from scripts import params
+    import params
     Execute(cmd,
       logoutput = True,
       not_if = status_cmd,

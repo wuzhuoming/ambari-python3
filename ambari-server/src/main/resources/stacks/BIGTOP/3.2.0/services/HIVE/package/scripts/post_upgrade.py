@@ -23,7 +23,7 @@ import shutil
 
 
 # Local Imports
-from scripts.hive import create_hive_hdfs_dirs
+from hive import create_hive_hdfs_dirs
 
 
 # Ambari Commons & Resource Management Imports
@@ -35,7 +35,7 @@ from resource_management.libraries.script import Script
 
 class HivePostUpgrade(Script):
   def move_tables(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     
     create_hive_hdfs_dirs()

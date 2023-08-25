@@ -28,11 +28,11 @@ from resource_management.libraries.functions.show_logs import show_logs
 from resource_management.libraries.functions.format import format
 from resource_management.core.resources.system import Execute, File
 from resource_management.core.signal_utils import TerminateStrategy
-from ambari_commons import subprocess32
+import subprocess
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def service(componentName, action='start', serviceName='yarn'):
-  from scripts import status_params
+  import status_params
   if componentName in status_params.service_map:
     service_name = status_params.service_map[componentName]
     if action == 'start' or action == 'stop':
@@ -43,8 +43,8 @@ def service(componentName, action='start', serviceName='yarn'):
 
 @OsFamilyFuncImpl(os_family=OsFamilyImpl.DEFAULT)
 def service(componentName, action='start', serviceName='yarn'):
-  from scripts import params
-  from scripts import status_params
+  import params
+  import status_params
 
   hadoop_env_exports = {
     'HADOOP_LIBEXEC_DIR': params.hadoop_libexec_dir
@@ -194,7 +194,7 @@ def checkAndStopRegistyDNS():
                          try_sleep=5)
   if code != 0:
     code, out, err = shell.checked_call(("pgrep", "-f", dns_pid_file), sudo=True, env=env_exports,
-                                        stderr=subprocess32.PIPE)
+                                        stderr=subprocess.PIPE)
     Logger.info("PID to kill was retrieved: '" + out + "'.")
     for pid in out.splitlines():
       try:

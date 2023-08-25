@@ -17,8 +17,8 @@ limitations under the License.
 
 """
 
-from scripts import status_params
-from scripts import utils
+import status_params
+import utils
 import ambari_simplejson as json # simplejson is much faster comparing to Python 2.6 json module and has the same functions set.
 import os
 import re

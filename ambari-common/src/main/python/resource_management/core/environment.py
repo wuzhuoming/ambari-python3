@@ -165,7 +165,7 @@ class Environment(object):
             try:
               self.run_action(resource, action)
             except Exception as ex:
-              Logger.info("Skipping failure of {0} due to ignore_failures. Failure reason: {1}".format(resource, ex.message))
+              Logger.info("Skipping failure of {0} due to ignore_failures. Failure reason: {1}".format(resource, ex))
               pass
 
       # Run delayed actions

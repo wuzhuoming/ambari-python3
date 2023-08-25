@@ -122,7 +122,7 @@ class HdfsResourceJar:
       if field_name == 'action':
         resource[json_field_name] = action_name
       elif field_name == 'mode' and main_resource.resource.mode:
-        resource[json_field_name] = oct(main_resource.resource.mode)[1:]
+        resource[json_field_name] = oct(main_resource.resource.mode)[2:]
       elif field_name == 'manage_if_exists':
         resource[json_field_name] = main_resource.manage_if_exists
       elif getattr(main_resource.resource, field_name):
@@ -398,7 +398,7 @@ class HdfsResourceWebHDFS:
   def action_delayed_for_nameservice(self, nameservice, action_name, main_resource):
     self.util = WebHDFSUtil(main_resource.resource.hdfs_site, nameservice, main_resource.resource.user,
                             main_resource.resource.security_enabled, main_resource.resource.logoutput)
-    self.mode = oct(main_resource.resource.mode)[1:] if main_resource.resource.mode else main_resource.resource.mode
+    self.mode = oct(main_resource.resource.mode)[2:] if main_resource.resource.mode else main_resource.resource.mode
     self.mode_set = False
     self.main_resource = main_resource
     if action_name == "download":

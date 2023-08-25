@@ -21,9 +21,9 @@ limitations under the License.
 import os
 
 # Local Imports
-from scripts.hive import refresh_yarn, create_hive_hdfs_dirs, create_hive_metastore_schema, create_metastore_schema, hive, jdbc_connector
-from scripts.hive_service import hive_service
-from scripts.setup_ranger_hive import setup_ranger_hive_metastore_service
+from hive import refresh_yarn, create_hive_hdfs_dirs, create_hive_metastore_schema, create_metastore_schema, hive, jdbc_connector
+from hive_service import hive_service
+from setup_ranger_hive import setup_ranger_hive_metastore_service
 
 # Ambari Commons & Resource Management Imports
 from resource_management.core.logger import Logger
@@ -44,12 +44,12 @@ LEGACY_HIVE_SERVER_CONF = "/etc/hive/conf.server"
 
 class HiveMetastore(Script):
   def install(self, env):
-    from scripts import params
+    import params
     self.install_packages(env)
 
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     refresh_yarn()
@@ -68,18 +68,18 @@ class HiveMetastore(Script):
     setup_ranger_hive_metastore_service()
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     hive_service('metastore', action='stop', upgrade_type=upgrade_type)
 
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     hive(name = 'metastore')
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     from resource_management.libraries.functions import check_process_status
     env.set_params(status_params)
 
@@ -88,7 +88,7 @@ class HiveMetastore(Script):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Metastore Stack Upgrade pre-restart")
-    from scripts import params
+    import params
 
     env.set_params(params)
 
@@ -117,8 +117,8 @@ class HiveMetastore(Script):
     Should not be invoked for a DOWNGRADE; Metastore only supports schema upgrades.
     """
     Logger.info("Upgrading Hive Metastore Schema")
-    from scripts import status_params
-    from scripts import params
+    import status_params
+    import params
     env.set_params(params)
 
     # ensure that configurations are written out before trying to upgrade the schema
@@ -185,15 +185,15 @@ class HiveMetastore(Script):
     Execute(command, user=params.hive_user, tries=1, environment=env_dict, logoutput=True)
     
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.hive_log_dir
 
   def get_user(self):
-    from scripts import params
+    import params
     return params.hive_user
 
   def get_pid_files(self):
-    from scripts import status_params
+    import status_params
     return [status_params.hive_metastore_pid]
 
 

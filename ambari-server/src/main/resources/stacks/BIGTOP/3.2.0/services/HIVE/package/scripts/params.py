@@ -22,7 +22,7 @@ limitations under the License.
 import os
 from urllib.parse import urlparse
 # Local Imports
-from scripts import status_params
+import status_params
 
 # Ambari Commons & Resource Management Imports
 from ambari_commons.constants import AMBARI_SUDO_BINARY

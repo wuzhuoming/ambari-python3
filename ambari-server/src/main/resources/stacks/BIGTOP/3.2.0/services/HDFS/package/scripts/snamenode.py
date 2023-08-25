@@ -25,8 +25,8 @@ from resource_management.libraries.functions.security_commons import build_expec
   cached_kinit_executor, get_params_from_filesystem, validate_security_config_properties, \
   FILE_TYPE_XML
 
-from scripts.hdfs_snamenode import snamenode
-from scripts.hdfs import hdfs
+from hdfs_snamenode import snamenode
+from hdfs import hdfs
 from ambari_commons.os_family_impl import OsFamilyImpl
 from ambari_commons import OSConst
 
@@ -34,39 +34,39 @@ from resource_management.core.logger import Logger
 
 class SNameNode(Script):
   def install(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     self.install_packages(env)
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     hdfs("secondarynamenode")
     snamenode(action="configure")
 
   def save_configs(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     hdfs("secondarynamenode")
 
   def reload_configs(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     Logger.info("RELOAD CONFIGS")
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     self.configure(env)
     snamenode(action="start")
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     snamenode(action="stop")
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
     snamenode(action="status")
 
@@ -75,22 +75,22 @@ class SNameNodeDefault(SNameNode):
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade pre-restart")
-    from scripts import params
+    import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
       stack_select.select_packages(params.version)
       
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.hdfs_log_dir
   
   def get_user(self):
-    from scripts import params
+    import params
     return params.hdfs_user
 
   def get_pid_files(self):
-    from scripts import status_params
+    import status_params
     return [status_params.snamenode_pid_file]
 
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)

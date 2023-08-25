@@ -352,7 +352,7 @@ class YumManager(GenericManager):
     regex = re.compile(name_regex)
 
     for package in packages:
-      if regex.match(package['name']):
+      if regex.match(package['name'].decode()):
         return True
     return False
 

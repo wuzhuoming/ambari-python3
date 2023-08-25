@@ -285,7 +285,7 @@ def _call(command, logoutput=None, throw_on_failure=True, stdout=subprocess.PIPE
               raise Fail(err_msg)
             
           if logoutput:
-            sys.stdout.write(line)
+            sys.stdout.write(line.decode())
             sys.stdout.flush()
 
     # Wait for process to terminate

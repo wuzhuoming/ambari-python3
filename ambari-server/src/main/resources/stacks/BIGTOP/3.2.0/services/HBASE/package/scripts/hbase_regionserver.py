@@ -31,21 +31,21 @@ from resource_management.libraries.functions.security_commons import build_expec
 from ambari_commons import OSCheck, OSConst
 from ambari_commons.os_family_impl import OsFamilyImpl
 
-from scripts.hbase import hbase
-from scripts.hbase_service import hbase_service
-from scripts import upgrade
-from scripts.setup_ranger_hbase import setup_ranger_hbase
+from hbase import hbase
+from hbase_service import hbase_service
+import upgrade
+from setup_ranger_hbase import setup_ranger_hbase
 
 
 
 class HbaseRegionServer(Script):
   def install(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     self.install_packages(env)
 
   def configure(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
     hbase(name='regionserver')
 
@@ -57,17 +57,17 @@ class HbaseRegionServer(Script):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class HbaseRegionServerWindows(HbaseRegionServer):
   def start(self, env):
-    from scripts import status_params
+    import status_params
     self.configure(env)
     Service(status_params.hbase_regionserver_win_service_name, action="start")
 
   def stop(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
     Service(status_params.hbase_regionserver_win_service_name, action="stop")
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
     check_windows_service_status(status_params.hbase_regionserver_win_service_name)
 
@@ -76,17 +76,17 @@ class HbaseRegionServerWindows(HbaseRegionServer):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class HbaseRegionServerDefault(HbaseRegionServer):
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     upgrade.prestart(env)
 
   def post_upgrade_restart(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     upgrade.post_regionserver(env)
 
   def start(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
     self.configure(env) # for security
     setup_ranger_hbase(upgrade_type=upgrade_type, service_name="hbase-regionserver")
@@ -94,7 +94,7 @@ class HbaseRegionServerDefault(HbaseRegionServer):
     hbase_service('regionserver', action='start')
 
   def stop(self, env, upgrade_type=None):
-    from scripts import params
+    import params
     env.set_params(params)
 
     hbase_service( 'regionserver',
@@ -102,13 +102,13 @@ class HbaseRegionServerDefault(HbaseRegionServer):
     )
 
   def status(self, env):
-    from scripts import status_params
+    import status_params
     env.set_params(status_params)
 
     check_process_status(status_params.regionserver_pid_file)
 
   def security_status(self, env):
-    from scripts import status_params
+    import status_params
 
     env.set_params(status_params)
     if status_params.security_enabled:
@@ -157,15 +157,15 @@ class HbaseRegionServerDefault(HbaseRegionServer):
       self.put_structured_out({"securityState": "UNSECURED"})
 
   def get_log_folder(self):
-    from scripts import params
+    import params
     return params.log_dir
   
   def get_user(self):
-    from scripts import params
+    import params
     return params.hbase_user
 
   def get_pid_files(self):
-    from scripts import status_params
+    import status_params
     return [status_params.regionserver_pid_file]
 
 if __name__ == "__main__":

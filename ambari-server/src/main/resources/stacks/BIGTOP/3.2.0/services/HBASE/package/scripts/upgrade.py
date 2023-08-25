@@ -34,13 +34,13 @@ from resource_management.libraries.functions import check_process_status
 
 
 def prestart(env):
-  from scripts import params
+  import params
 
   if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
     stack_select.select_packages(params.version)
 
 def post_regionserver(env):
-  from scripts import params
+  import params
   env.set_params(params)
 
   check_cmd = "echo 'status \"simple\"' | {0} shell".format(params.hbase_cmd)

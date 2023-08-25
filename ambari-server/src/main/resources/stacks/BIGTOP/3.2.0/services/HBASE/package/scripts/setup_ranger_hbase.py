@@ -21,7 +21,7 @@ from resource_management.core.logger import Logger
 from resource_management.libraries.functions.setup_ranger_plugin_xml import setup_ranger_plugin
 
 def setup_ranger_hbase(upgrade_type=None, service_name="hbase-master"):
-  from scripts import params
+  import params
 
   if params.enable_ranger_hbase:
 

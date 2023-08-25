@@ -23,8 +23,8 @@ import os
 from resource_management.libraries.script.script import Script
 from resource_management.libraries.functions.default import default
 from resource_management.libraries.functions.format import format
-from scripts.install_params import exclude_packages
-from scripts.status_params import *
+from install_params import exclude_packages
+from status_params import *
 
 config = Script.get_config()
 hadoop_conf_dir = None

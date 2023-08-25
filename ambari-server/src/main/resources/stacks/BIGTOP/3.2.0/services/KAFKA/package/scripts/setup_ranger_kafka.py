@@ -22,10 +22,9 @@ from resource_management.libraries.functions.format import format
 from resource_management.libraries.functions.setup_ranger_plugin_xml import setup_configuration_file_for_required_plugins
 
 def setup_ranger_kafka():
-   from scripts import params
+  import params
 
   if params.enable_ranger_kafka:
-
     from resource_management.libraries.functions.setup_ranger_plugin_xml import setup_ranger_plugin
 
     if params.retryAble:
@@ -59,7 +58,7 @@ def setup_ranger_kafka():
                                                         configuration_attributes = params.config['configurationAttributes']['ssl-client'], file_name='ssl-client.xml')
         else:
           Logger.info('Ranger KMS is not ssl enabled, skipping ssl-client for hdfs audits.')
-      except Exception, err:
+      except Exception as err:
         Logger.exception("Audit directory creation in HDFS for KAFKA Ranger plugin failed with error:\n{0}".format(err))
 
     setup_ranger_plugin('kafka-broker', params.service_name, params.previous_jdbc_jar,

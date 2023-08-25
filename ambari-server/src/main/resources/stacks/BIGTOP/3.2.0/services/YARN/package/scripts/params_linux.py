@@ -40,7 +40,7 @@ from resource_management.libraries import functions
 from resource_management.libraries.functions import is_empty
 from resource_management.libraries.functions.get_architecture import get_architecture
 from resource_management.libraries.functions.setup_ranger_plugin_xml import get_audit_configs, generate_ranger_service_config
-from scripts import status_params
+import status_params
 from functions import calc_heap_memory, ensure_unit_for_memory
 
 

@@ -238,6 +238,6 @@ class ComponentStatusExecutor(threading.Thread):
     This needs to be done to remove information about clusters which where deleted (e.g. ambari-server reset)
     """
     with self.reported_component_status_lock:
-      for cluster_id in self.reported_component_status.keys():
+      for cluster_id in list(self.reported_component_status.keys()):
         if cluster_id not in self.topology_cache.get_cluster_ids():
           del self.reported_component_status[cluster_id]

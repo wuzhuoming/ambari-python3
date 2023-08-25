@@ -36,7 +36,7 @@ class HdfsServiceCheck(Script):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class HdfsServiceCheckDefault(HdfsServiceCheck):
   def service_check(self, env):
-    from scripts import params
+    import params
 
     env.set_params(params)
     unique = functions.get_unique_id_and_date()
@@ -126,7 +126,7 @@ class HdfsServiceCheckDefault(HdfsServiceCheck):
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
 class HdfsServiceCheckWindows(HdfsServiceCheck):
   def service_check(self, env):
-    from scripts import params
+    import params
     env.set_params(params)
 
     unique = functions.get_unique_id_and_date()

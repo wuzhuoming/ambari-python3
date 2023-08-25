@@ -247,7 +247,7 @@ class HostInfoLinux(HostInfo):
       pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
       for pid in pids:
         try:
-          fp = open(os.path.join('/proc', pid, 'cmdline'), 'rb')
+          fp = open(os.path.join('/proc', pid, 'cmdline'), 'r')
         except IOError:
           continue # avoid race condition if this process already died, since the moment we got pids list.
 

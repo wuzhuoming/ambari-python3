@@ -48,7 +48,7 @@ def deregister():
   This function will obtain the Kerberos ticket if security is enabled.
   :return:
   """
-  from scripts import params
+  import params
 
   Logger.info('HiveServer2 executing "deregister" command to complete upgrade...')
 
@@ -85,7 +85,7 @@ def _get_hive_execute_path(stack_version_formatted):
   :param stack_version_formatted: Exact stack-version to use in the new path
   :return: Hive execute path for the exact stack-version
   """
-  from scripts import params
+  import params
 
   hive_execute_path = params.execute_path
   formatted_stack_version = format_stack_version(stack_version_formatted)
@@ -109,7 +109,7 @@ def _get_current_hiveserver_version():
 
   :return:  the hiveserver2 version, returned by "hive --version"
   """
-  from scripts import params
+  import params
 
   try:
     # When downgrading the source version should be the version we are downgrading from

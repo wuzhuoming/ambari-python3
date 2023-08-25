@@ -304,8 +304,9 @@ class Script(object):
     if len(sys.argv) >= 9:
       Script.ca_cert_file_path = sys.argv[8]
 
-    logging_level_str = logging._levelToName[self.logging_level]
-    Logger.initialize_logger(__name__, logging_level=logging_level_str)
+    # logging_level_str = logging._levelToName[self.logging_level]
+
+    Logger.initialize_logger(__name__, logging_level=self.logging_level)
 
     # on windows we need to reload some of env variables manually because there is no default paths for configs(like
     # /etc/something/conf on linux. When this env vars created by one of the Script execution, they can not be updated
@@ -432,7 +433,7 @@ class Script(object):
 
       pids.append(sudo.read_file(pid_file).strip())
 
-    Logger.info("Component has started with pid(s): {0}".format(', '.join(pids)))
+    Logger.info("Component has started with pid(s): {0}".format(', '.join([x.decode('utf-8') for x in pids])))
 
   def post_stop(self, env):
     """
