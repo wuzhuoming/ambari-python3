@@ -35,7 +35,7 @@ from resource_management.core.logger import Logger
 
 
 def kafka(upgrade_type=None):
-    import params
+    from scripts import params
     ensure_base_directories()
 
     kafka_server_config = mutable_config_dict(params.config['configurations']['kafka-broker'])
@@ -198,7 +198,7 @@ def mutable_config_dict(kafka_broker_config):
 
 # Used to workaround the hardcoded pid/log dir used on the kafka bash process launcher
 def setup_symlink(kafka_managed_dir, kafka_ambari_managed_dir):
-  import params
+  from scripts import params
   backup_folder_path = None
   backup_folder_suffix = "_tmp"
   if kafka_ambari_managed_dir != kafka_managed_dir:
@@ -253,7 +253,7 @@ def setup_symlink(kafka_managed_dir, kafka_ambari_managed_dir):
 
 # Uses agent temp dir to store backup files
 def backup_dir_contents(dir_path, backup_folder_suffix):
-  import params
+  from scripts import params
   backup_destination_path = params.tmp_dir + os.path.normpath(dir_path)+backup_folder_suffix
   Directory(backup_destination_path,
             mode=0o755,
@@ -278,7 +278,7 @@ def backup_dir_contents(dir_path, backup_folder_suffix):
   return backup_destination_path
 
 def ensure_base_directories():
-  import params
+  from scripts import params
   Directory([params.kafka_log_dir, params.kafka_pid_dir, params.conf_dir],
             mode=0o755,
             cd_access='a',

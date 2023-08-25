@@ -27,7 +27,7 @@ from resource_management.core import sudo
 
 class ServiceCheck(Script):
   def service_check(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     # TODO, Kafka Service check should be more robust , It should get all the broker_hosts
@@ -64,7 +64,7 @@ class ServiceCheck(Script):
       Logger.warning("Under replicated partitions found: {0}".format(under_rep_cmd_out))
 
   def read_kafka_config(self):
-    import params
+    from scripts  import params
 
     kafka_config = {}
     content = sudo.read_file(params.conf_dir + "/server.properties")

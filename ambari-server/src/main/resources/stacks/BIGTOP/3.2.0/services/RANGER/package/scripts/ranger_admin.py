@@ -42,7 +42,7 @@ class RangerAdmin(Script):
     self.install_packages(env)
 
   def initialize(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
     ranger_admin_setup_marker = os.path.join(params.ranger_conf, "admin_setup")
     if not os.path.exists(ranger_admin_setup_marker):
@@ -55,11 +55,11 @@ class RangerAdmin(Script):
       File(ranger_admin_setup_marker,
            owner = params.unix_user,
            group = params.unix_group,
-           mode = 0640
+           mode = 0o640
            )
 
   def stop(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
 
     Execute(format('{params.ranger_stop}'), environment={'JAVA_HOME': params.java_home}, user=params.unix_user)
@@ -69,7 +69,7 @@ class RangerAdmin(Script):
            )
 
   def pre_upgrade_restart(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
 
     upgrade.prestart(env)
@@ -77,7 +77,7 @@ class RangerAdmin(Script):
     self.set_ru_rangeradmin_in_progress(params.upgrade_marker_file)
 
   def post_upgrade_restart(self,env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
 
     if os.path.isfile(params.upgrade_marker_file):
@@ -108,7 +108,7 @@ class RangerAdmin(Script):
           Logger.error("Error adding field to Ranger Audits Solr Collection. Kindly check Infra Solr service to be up and running {0}".format(execution_exception))
 
   def start(self, env, upgrade_type=None):
-    import params
+    from scripts import params
     env.set_params(params)
 
     if upgrade_type is None:
@@ -145,7 +145,7 @@ class RangerAdmin(Script):
     pass
 
   def configure(self, env, upgrade_type=None, setup_db=False):
-    import params
+    from scripts import params
     env.set_params(params)
 
     # set up db if we are not upgrading and setup_db is true
@@ -191,7 +191,7 @@ class RangerAdmin(Script):
     return os.path.isfile(upgrade_marker_file)
 
   def setup_ranger_database(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     upgrade_stack = stack_select._get_upgrade_stack()
@@ -207,7 +207,7 @@ class RangerAdmin(Script):
       setup_ranger_xml.setup_ranger_db(stack_version = target_version)
 
   def setup_ranger_java_patches(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     upgrade_stack = stack_select._get_upgrade_stack()
@@ -223,7 +223,7 @@ class RangerAdmin(Script):
       setup_ranger_xml.setup_java_patch(stack_version = target_version)
 
   def set_pre_start(self, env):
-    import params
+    from scripts import params
     env.set_params(params)
 
     orchestration = stack_select.PACKAGE_SCOPE_STANDARD
@@ -247,11 +247,11 @@ class RangerAdmin(Script):
       stack_select.select(stack_select_package_name, params.version)
 
   def get_log_folder(self):
-    import params
+    from scripts import params
     return params.admin_log_dir
 
   def get_user(self):
-    import params
+    from scripts import params
     return params.unix_user
 
   def get_pid_files(self):

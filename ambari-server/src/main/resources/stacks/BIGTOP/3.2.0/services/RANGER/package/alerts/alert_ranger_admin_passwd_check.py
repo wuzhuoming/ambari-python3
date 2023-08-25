@@ -124,7 +124,7 @@ def execute(configurations={}, parameters={}, host_name=None):
         result_code = 'WARNING'
         label = 'Ranger Admin service is not reachable, please restart the service'
 
-  except Exception, e:
+  except Exception as e:
     label = str(e)
     result_code = 'UNKNOWN'
     logger.exception(label)
@@ -151,13 +151,13 @@ def check_ranger_login(ranger_auth_link, username, password):
     if response_code == 200:
       response = json.loads(result.read())
     return response_code
-  except urllib2.HTTPError, e:
+  except urllib2.HTTPError as e:
     logger.exception("Error during Ranger service authentication. Http status code - {0}. {1}".format(e.code, e.read()))
     return e.code
-  except urllib2.URLError, e:
+  except urllib2.URLError as e:
     logger.exception("Error during Ranger service authentication. {0}".format(e.reason))
     return None
-  except Exception, e:
+  except Exception as e:
     return 401
 
 def get_ranger_user(ranger_get_user, username, password, user):
@@ -185,11 +185,11 @@ def get_ranger_user(ranger_get_user, username, password, user):
           return True
     else:
       return False
-  except urllib2.HTTPError, e:
+  except urllib2.HTTPError as e:
     logger.exception("Error getting user from Ranger service. Http status code - {0}. {1}".format(e.code, e.read()))
     return False
-  except urllib2.URLError, e:
+  except urllib2.URLError as e:
     logger.exception("Error getting user from Ranger service. {0}".format(e.reason))
     return False
-  except Exception, e:
+  except Exception as e:
     return False

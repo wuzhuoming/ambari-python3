@@ -158,7 +158,7 @@ def yarn(name=None, config_dir=None):
             configuration_attributes=params.config['configurationAttributes']['yarn-hbase-site'],
             owner=params.yarn_hbase_user,
             group=params.user_group,
-            mode=0644
+            mode=0o644
             )
 
   XmlConfig("resource-types.xml",
@@ -167,7 +167,7 @@ def yarn(name=None, config_dir=None):
             configuration_attributes=params.config['configurationAttributes']['resource-types'],
             owner=params.yarn_user,
             group=params.user_group,
-            mode=0644
+            mode=0o644
             )
   File(format("{limits_conf_dir}/yarn.conf"),
        mode=0o644,
@@ -237,7 +237,7 @@ def yarn(name=None, config_dir=None):
       File(os.path.join(config_dir, 'yarn_registry_dns_jaas.conf'),
            owner=params.yarn_user,
            group=params.user_group,
-           mode=0644,
+           mode=0o644,
            content=Template("yarn_registry_dns_jaas.conf.j2")
       )
     File(os.path.join(config_dir, 'yarn_nm_jaas.conf'),
@@ -603,33 +603,33 @@ def setup_atsv2_hbase_files():
                    configuration_attributes=params.config['configurationAttributes']['yarn-hbase-policy'],
                    owner = params.yarn_hbase_user,
                    group = params.user_group,
-                   mode=0644
+                   mode=0o644
                    )
 
     File(os.path.join(params.yarn_hbase_conf_dir, "hbase-env.sh"),
          owner=params.yarn_hbase_user,
          group=params.user_group,
-         mode=0644,
+         mode=0o644,
          content=InlineTemplate(params.yarn_hbase_env_sh_template)
          )
 
     File( format("{yarn_hbase_grant_premissions_file}"),
           owner   = params.yarn_hbase_user,
           group   = params.user_group,
-          mode    = 0644,
+          mode    = 0o644,
           content = Template('yarn_hbase_grant_permissions.j2')
           )
 
     if (params.yarn_hbase_log4j_props != None):
         File(format("{yarn_hbase_conf_dir}/log4j.properties"),
-             mode=0644,
+             mode=0o644,
              group=params.user_group,
              owner=params.yarn_hbase_user,
              content=InlineTemplate(params.yarn_hbase_log4j_props)
              )
     elif (os.path.exists(format("{yarn_hbase_conf_dir}/log4j.properties"))):
         File(format("{yarn_hbase_conf_dir}/log4j.properties"),
-             mode=0644,
+             mode=0o644,
              group=params.user_group,
              owner=params.yarn_hbase_user
              )
@@ -764,7 +764,7 @@ def setup_system_services(config_dir=None):
                         action="create_on_execute",
                         owner=params.hdfs_user,
                         group=params.hdfs_user,
-                        mode=0555,
+                        mode=0o555,
                         )
 
     params.HdfsResource(None, action="execute")

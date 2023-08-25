@@ -29,7 +29,7 @@ def hbase_service(
   name,
   action = 'start'): # 'start' or 'stop'
 
-    import params
+    from scripts import params
 
     sudo = AMBARI_SUDO_BINARY
     daemon_script = format("{yarn_hbase_bin}/hbase-daemon.sh")
@@ -81,7 +81,7 @@ def hbase(action):
 
 
 def configure_hbase(env):
-    import params
+    from scripts import params
     env.set_params(params)
     params.HdfsResource(params.yarn_hbase_hdfs_root_dir,
                             type="directory",
@@ -91,12 +91,12 @@ def configure_hbase(env):
     params.HdfsResource(None, action="execute")
 
 def create_hbase_package():
-    import params
+    from scripts import params
     file_path = format("{yarn_hbase_package_preparation_file}")
     Logger.info("Executing hbase package creation script file '" + file_path +"'")
     try:
         File( file_path,
-              mode    = 0755,
+              mode    = 0o755,
               content = Template('yarn_hbase_package_preparation.j2')
               )
         Execute( file_path,
@@ -109,7 +109,7 @@ def create_hbase_package():
         raise
 
 def copy_hbase_package_to_hdfs():
-    import params
+    from scripts import params
 
     try:
 
@@ -120,7 +120,7 @@ def copy_hbase_package_to_hdfs():
                             action="create_on_execute",
                             owner=params.hdfs_user,
                             group=params.hdfs_user,
-                            mode=0555,
+                            mode=0o555,
                             )
         params.HdfsResource(format("{yarn_hbase_app_hdfs_path}/hbase.tar.gz"),
                             type="file",
@@ -128,7 +128,7 @@ def copy_hbase_package_to_hdfs():
                             source=format("{yarn_hbase_user_tmp}/hbase.tar.gz"),
                             owner=params.hdfs_user,
                             group=params.user_group,
-                            mode=0444,
+                            mode=0o444,
                             )
         params.HdfsResource(None, action="execute")
     except:
@@ -138,7 +138,7 @@ def copy_hbase_package_to_hdfs():
 
 
 def createTables():
-    import params
+    from scripts import params
     try:
         Logger.info("Creating HBase tables")
         Execute(format("sleep 10;{yarn_hbase_table_create_cmd}"),
@@ -154,7 +154,7 @@ def createTables():
             File( format("{yarn_hbase_grant_premissions_file}"),
                   owner   = params.yarn_hbase_user,
                   group   = params.user_group,
-                  mode    = 0644,
+                  mode    = 0o644,
                   content = Template('yarn_hbase_grant_permissions.j2')
                   )
             Execute( format("{yarn_hbase_table_grant_premission_cmd}"),

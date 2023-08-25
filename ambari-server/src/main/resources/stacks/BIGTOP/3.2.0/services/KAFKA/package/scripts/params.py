@@ -27,7 +27,7 @@ from resource_management.libraries.functions.default import default
 from utils import get_bare_principal
 from resource_management.libraries.functions.get_stack_version import get_stack_version
 from resource_management.libraries.functions.is_empty import is_empty
-import status_params
+from scripts import status_params
 from resource_management.libraries.resources.hdfs_resource import HdfsResource
 from resource_management.libraries.functions import stack_select
 from resource_management.libraries.functions import conf_select
