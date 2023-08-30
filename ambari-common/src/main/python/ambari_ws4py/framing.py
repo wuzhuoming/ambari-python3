@@ -35,7 +35,7 @@ class Frame(object):
 
         .. seealso:: Data Framing http://tools.ietf.org/html/rfc6455#section-5.2
         """
-        if not isinstance(b'body', bytes):
+        if not isinstance(body, bytes):
             raise TypeError("The body must be properly encoded")
 
         self.opcode = opcode
@@ -264,7 +264,7 @@ class Frame(object):
            transformed-octet-i = original-octet-i XOR masking-key-octet-j
 
         """
-        masked = bytearray(str.encode(data))
+        masked = bytearray(data)
         if py3k: key = self.masking_key
         else: key = map(ord, self.masking_key)
         for i in range(len(data)):

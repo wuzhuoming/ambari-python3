@@ -4,7 +4,7 @@ import struct
 
 from ambari_ws4py.framing import Frame, OPCODE_CONTINUATION, OPCODE_TEXT, \
      OPCODE_BINARY, OPCODE_CLOSE, OPCODE_PING, OPCODE_PONG
-from ambari_ws4py.compat import str, py3k
+from ambari_ws4py.compat import unicode, py3k
 
 __all__ = ['Message', 'TextMessage', 'BinaryMessage', 'CloseControlMessage',
            'PingControlMessage', 'PongControlMessage']
@@ -32,10 +32,10 @@ class Message(object):
         self._completed = False
         self.encoding = encoding
 
-        if isinstance(data, str):
+        if isinstance(data, unicode):
             if not encoding:
                 raise TypeError("unicode data without an encoding")
-            data = data.decode()
+            data = data.encode(encoding)
         elif isinstance(data, bytearray):
             data = bytes(data)
         elif not isinstance(data, bytes):
@@ -95,7 +95,7 @@ class Message(object):
             self.data += data
         elif isinstance(data, bytearray):
             self.data += bytes(data)
-        elif isinstance(data, str):
+        elif isinstance(data, unicode):
             self.data += data.encode(self.encoding)
         else:
             raise TypeError("%s is not a supported data type" % type(data))
@@ -144,6 +144,8 @@ class CloseControlMessage(Message):
         if code:
             data += struct.pack("!H", code)
         if reason is not None:
+            if isinstance(reason, unicode):
+                reason = reason.encode('utf-8')
             data += reason
 
         Message.__init__(self, OPCODE_CLOSE, data, 'utf-8')
