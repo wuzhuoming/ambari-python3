@@ -32,7 +32,7 @@ import string
 import subprocess
 import threading
 import traceback
-from .exceptions import Fail, ExecutionFailed, ExecuteTimeoutException
+from resource_management.core.exceptions import Fail, ExecutionFailed, ExecuteTimeoutException
 from resource_management.core.logger import Logger
 from resource_management.core import utils
 from ambari_commons.constants import AMBARI_SUDO_BINARY

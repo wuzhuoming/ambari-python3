@@ -88,13 +88,11 @@ class TestSensitiveDataEncryption(TestCase):
   @patch("os.path.isdir", new = MagicMock(return_value=True))
   @patch("os.access", new = MagicMock(return_value=True))
   @patch.object(ServerClassPath, "get_full_ambari_classpath_escaped_for_shell", new = MagicMock(return_value = 'test' + os.pathsep + 'path12'))
-  @patch('ambari_server.serverConfiguration.find_properties_file')
   @patch("ambari_server.setupSecurity.find_jdk")
   @patch("ambari_server.setupSecurity.get_ambari_properties")
   @patch("ambari_server.setupSecurity.run_os_command")
-  def test_sensitive_data_encryption(self, run_os_command_mock, get_ambari_properties_method, find_jdk_mock, find_properties_file_mock):
+  def test_sensitive_data_encryption(self, run_os_command_mock, get_ambari_properties_method, find_jdk_mock):
     find_jdk_mock.return_value = "/"
-    find_properties_file_mock.return_value = "/tmp/ambari.properties"
     environ = os.environ.copy()
 
     run_os_command_mock.return_value = 0,"",""
@@ -121,13 +119,11 @@ class TestSensitiveDataEncryption(TestCase):
   @patch("os.path.isdir", new = MagicMock(return_value=True))
   @patch("os.access", new = MagicMock(return_value=True))
   @patch.object(ServerClassPath, "get_full_ambari_classpath_escaped_for_shell", new = MagicMock(return_value = 'test' + os.pathsep + 'path12'))
-  @patch('ambari_server.serverConfiguration.find_properties_file')
   @patch("ambari_server.setupSecurity.find_jdk")
   @patch("ambari_server.setupSecurity.get_ambari_properties")
   @patch("ambari_server.setupSecurity.run_os_command")
-  def test_sensitive_data_decryption_not_persisted(self, run_os_command_mock, get_ambari_properties_method, find_jdk_mock,find_properties_file_mock):
+  def test_sensitive_data_decryption_not_persisted(self, run_os_command_mock, get_ambari_properties_method, find_jdk_mock):
     find_jdk_mock.return_value = "/"
-    find_properties_file_mock.return_value = "/tmp/ambari.properties"
     environ = os.environ.copy()
     master = "master"
     environ[SECURITY_KEY_ENV_VAR_NAME] = master

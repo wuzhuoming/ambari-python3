@@ -106,7 +106,7 @@ class Environment(object):
     else:
       variables = dict((var, getattr(arg, var)) for var in dir(arg))
     
-    for variable, value in list(variables.items()):
+    for variable, value in variables.items():
       # don't include system variables, methods, classes, modules
       try:
         if not variable.startswith("__") and \

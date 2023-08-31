@@ -27,7 +27,7 @@ from resource_management.core.logger import Logger
 
 @OsFamilyFuncImpl(os_family=OSConst.WINSRV_FAMILY)
 def hbase_decommission(env):
-  from scripts. import params
+  from scripts import params
 
   env.set_params(params)
   File(params.region_drainer, content=StaticFile("draining_servers.rb"), owner=params.hbase_user, mode="f")

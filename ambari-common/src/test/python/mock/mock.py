@@ -28,18 +28,10 @@ __all__ = (
 
 __version__ = '1.0.1'
 
-import logging
 
-logging.basicConfig(level=logging.DEBUG)
-
+import distro
 import pprint
 import sys
-
-try:
-    import platform.linux_distribution
-except ImportError:
-    import distro
-
 
 try:
     import inspect
@@ -74,13 +66,13 @@ else:
             return inner
 
 try:
-    str
+    unicode
 except NameError:
     # Python 3
-    str = str = str
+    basestring = unicode = str
 
 try:
-    int
+    long
 except NameError:
     # Python 3
     long = int
@@ -1773,7 +1765,6 @@ _calculate_return_value = {
     '__hash__': lambda self: object.__hash__(self),
     '__str__': lambda self: object.__str__(self),
     '__sizeof__': lambda self: object.__sizeof__(self),
-    #'__unicode__': lambda self: str(object.__str__(self)),
 }
 
 _return_values = {

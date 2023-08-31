@@ -27,7 +27,7 @@ import re
 from ambari_commons import OSCheck
 from functools import wraps
 
-from .exceptions import FatalException, NonFatalException, TimeoutError
+from ambari_commons.exceptions import FatalException, NonFatalException, TimeoutError
 
 if OSCheck.is_windows_family():
   from ambari_commons.os_windows import os_run_os_command
@@ -36,8 +36,8 @@ else:
   from ambari_commons.os_linux import os_run_os_command
   pass
 
-from .logging_utils import *
-from .os_check import OSCheck
+from ambari_commons.logging_utils import *
+from ambari_commons.os_check import OSCheck
 
 
 def openurl(url, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, *args, **kwargs):

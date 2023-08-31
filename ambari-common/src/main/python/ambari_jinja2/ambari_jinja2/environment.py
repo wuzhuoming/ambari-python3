@@ -292,7 +292,7 @@ class Environment(object):
         yet.  This is used by :ref:`extensions <writing-extensions>` to register
         callbacks and configuration values without breaking inheritance.
         """
-        for key, value in list(attributes.items()):
+        for key, value in attributes.items():
             if not hasattr(self, key):
                 setattr(self, key, value)
 

@@ -80,10 +80,8 @@ def public_hostname(config):
   try:
     if config.has_option('agent', 'public_hostname_script'):
       scriptname = config.get('agent', 'public_hostname_script')
-      output = subprocess.Popen(scriptname, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+      output = subprocess.Popen(scriptname, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
       out, err = output.communicate()
-      out = out.decode()
-      err = err.decode()
       if (0 == output.returncode and 0 != len(out.strip())):
         cached_public_hostname = out.strip().lower()
         logger.info("Read public hostname '" + cached_public_hostname + "' using agent:public_hostname_script")
@@ -119,10 +117,8 @@ def server_hostnames(config):
   if config.has_option('server', 'hostname_script'):
     scriptname = config.get('server', 'hostname_script')
     try:
-      osStat = subprocess.Popen([scriptname], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      osStat = subprocess.Popen([scriptname], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
       out, err = osStat.communicate()
-      out = out.decode()
-      err = err.decode()
       if (0 == osStat.returncode and 0 != len(out.strip())):
         cached_server_hostnames = arrayFromCsvString(out)
         logger.info("Read server hostname '" + cached_server_hostnames + "' using server:hostname_script")

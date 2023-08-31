@@ -27,7 +27,7 @@ import time
 import signal
 import re
 
-from .AgentException import AgentException
+from ambari_agent.AgentException import AgentException
 from ambari_agent.BackgroundCommandExecutionHandle import BackgroundCommandExecutionHandle
 from ambari_agent.models.commands import AgentCommand, CommandStatus
 from ambari_commons.str_utils import split_on_chunks

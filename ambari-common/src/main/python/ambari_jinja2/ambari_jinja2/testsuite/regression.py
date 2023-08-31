@@ -121,7 +121,7 @@ class BugTestCase(JinjaTestCase):
 
         ''')
 
-        assert tmpl.render().split() == map(str, list(range(1, 11))) * 5
+        assert tmpl.render().split() == map(str, range(1, 11)) * 5
 
     def test_weird_inline_comment(self):
         env = Environment(line_statement_prefix='%')

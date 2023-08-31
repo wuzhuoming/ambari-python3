@@ -27,8 +27,8 @@ import os
 
 import time
 
-from .get_kinit_path import get_kinit_path
-from .get_klist_path import get_klist_path
+from resource_management.libraries.functions.get_kinit_path import get_kinit_path
+from resource_management.libraries.functions.get_klist_path import get_klist_path
 from resource_management.core import global_lock
 from resource_management.core import shell
 from resource_management.core.exceptions import Fail

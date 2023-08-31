@@ -21,7 +21,6 @@ limitations under the License.
 import sys
 import zipfile
 import os
-import logging
 from ambari_server.ambariPath import AmbariPath
 
 # Default values are hardcoded here

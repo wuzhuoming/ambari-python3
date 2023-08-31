@@ -22,6 +22,7 @@ from unittest import TestCase
 import os
 import logging
 from mock.mock import patch, MagicMock, call
+from ambari_agent.LiveStatus import LiveStatus
 from ambari_commons import OSCheck
 from only_for_platform import os_distro_value
 
@@ -33,7 +34,6 @@ with patch("distro.linux_distribution", return_value = ('Suse','11','Final')):
 class TestActualConfigHandler(TestCase):
 
   def setUp(self):
-    from LiveStatus import LiveStatus
     LiveStatus.SERVICES = [
       "HDFS", "MAPREDUCE", "GANGLIA", "HBASE",
       "ZOOKEEPER", "OOZIE",

@@ -49,7 +49,7 @@ def get_property_value(dictionary, property_name, default_value=None, trim_strin
     # If the value is none, consider it empty...
     if value is None:
       value = empty_value
-    elif (type(value) == str) or (type(value) == str):
+    elif (type(value) == str):
       value = value.strip()
 
       if len(value) == 0:
