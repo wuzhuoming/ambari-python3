@@ -1,15 +1,15 @@
 """Implementation of JSONEncoder
 """
-from __future__ import absolute_import
+
 import re
 from operator import itemgetter
 # Do not import Decimal directly to avoid reload issues
 import decimal
-from .compat import unichr, binary_type, text_type, string_types, integer_types, PY3
+from ambari_simplejson.compat import chr, binary_type, text_type, string_types, integer_types, PY3
 
 
 def _import_speedups():
-    from . import c_extension
+    from ambari_simplejson import c_extension
     _speedups = c_extension.get()
 
     if _speedups:
@@ -23,8 +23,8 @@ def _import_speedups():
 
 c_encode_basestring_ascii, c_make_encoder = _import_speedups()
 
-from .decoder import PosInf
-from .raw_json import RawJSON
+from ambari_simplejson.decoder import PosInf
+from ambari_simplejson.raw_json import RawJSON
 
 ESCAPE = re.compile(r'[\x00-\x1f\\"]')
 ESCAPE_ASCII = re.compile(r'([\\"]|[^\ -~])')
@@ -44,7 +44,7 @@ for i in range(0x20):
 
 FLOAT_REPR = repr
 
-def encode_basestring(s, _PY3=PY3, _q=u'"'):
+def encode_basestring(s, _PY3=PY3, _q='"'):
     """Return a JSON representation of a Python string
 
     """
@@ -57,15 +57,15 @@ def encode_basestring(s, _PY3=PY3, _q=u'"'):
             s = str.__str__(s)
     else:
         if isinstance(s, str) and HAS_UTF8.search(s) is not None:
-            s = unicode(s, 'utf-8')
-        elif type(s) not in (str, unicode):
+            s = str(s, 'utf-8')
+        elif type(s) not in (str, str):
             # convert an str subclass instance to exact str
             # convert a unicode subclass instance to exact unicode
             # raise a TypeError otherwise
             if isinstance(s, str):
                 s = str.__str__(s)
             else:
-                s = unicode.__getnewargs__(s)[0]
+                s = str.__getnewargs__(s)[0]
     def replace(match):
         return ESCAPE_DCT[match.group(0)]
     return _q + ESCAPE.sub(replace, s) + _q
@@ -84,15 +84,15 @@ def py_encode_basestring_ascii(s, _PY3=PY3):
             s = str.__str__(s)
     else:
         if isinstance(s, str) and HAS_UTF8.search(s) is not None:
-            s = unicode(s, 'utf-8')
-        elif type(s) not in (str, unicode):
+            s = str(s, 'utf-8')
+        elif type(s) not in (str, str):
             # convert an str subclass instance to exact str
             # convert a unicode subclass instance to exact unicode
             # raise a TypeError otherwise
             if isinstance(s, str):
                 s = str.__str__(s)
             else:
-                s = unicode.__getnewargs__(s)[0]
+                s = str.__getnewargs__(s)[0]
     def replace(match):
         s = match.group(0)
         try:
@@ -308,7 +308,7 @@ class JSONEncoder(object):
         if self.ensure_ascii:
             return ''.join(chunks)
         else:
-            return u''.join(chunks)
+            return ''.join(chunks)
 
     def iterencode(self, o, _one_shot=False):
         """Encode the given object and yield each string
@@ -410,7 +410,7 @@ class JSONEncoderForHTML(JSONEncoder):
         if self.ensure_ascii:
             return ''.join(chunks)
         else:
-            return u''.join(chunks)
+            return ''.join(chunks)
 
     def iterencode(self, o, _one_shot=False):
         chunks = super(JSONEncoderForHTML, self).iterencode(o, _one_shot)
@@ -420,8 +420,8 @@ class JSONEncoderForHTML(JSONEncoder):
             chunk = chunk.replace('>', '\\u003e')
 
             if not self.ensure_ascii:
-                chunk = chunk.replace(u'\u2028', '\\u2028')
-                chunk = chunk.replace(u'\u2029', '\\u2029')
+                chunk = chunk.replace('\u2028', '\\u2028')
+                chunk = chunk.replace('\u2029', '\\u2029')
 
             yield chunk
 

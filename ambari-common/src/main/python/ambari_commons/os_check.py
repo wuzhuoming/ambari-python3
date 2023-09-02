@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''
 Licensed to the Apache Software Foundation (ASF) under one
@@ -22,6 +22,7 @@ import re
 import os
 import sys
 import platform
+import distro
 
 def _get_windows_version():
   """
@@ -164,9 +165,7 @@ class OS_CONST_TYPE(type):
     raise Exception("Unknown class property '%s'" % name)
 
 
-class OSConst:
-  __metaclass__ = OS_CONST_TYPE
-
+class OSConst(metaclass=OS_CONST_TYPE):
   systemd_redhat_os_major_versions = ["7"]
 
 
@@ -197,12 +196,12 @@ class OSCheck:
       # linux distribution
       PYTHON_VER = sys.version_info[0] * 10 + sys.version_info[1]
 
-      if PYTHON_VER <= 26:
-        raise RuntimeError("Python 2.6 or less not supported")
+      if sys.version_info[0] < 3:
+        raise RuntimeError("Python 2 or less not supported")
       elif _is_redhat_linux():
-        distribution = platform.dist()
+        distribution = distro.linux_distribution()
       else:
-        distribution = platform.linux_distribution()
+        distribution = distro.linux_distribution()
 
     if distribution[0] == '':
       distribution = advanced_check(distribution)
