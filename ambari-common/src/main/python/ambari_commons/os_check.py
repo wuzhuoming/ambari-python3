@@ -194,14 +194,7 @@ class OSCheck:
         distribution = ("", "", "")
     else:
       # linux distribution
-      PYTHON_VER = sys.version_info[0] * 10 + sys.version_info[1]
-
-      if sys.version_info[0] < 3:
-        raise RuntimeError("Python 2 or less not supported")
-      elif _is_redhat_linux():
-        distribution = distro.linux_distribution()
-      else:
-        distribution = distro.linux_distribution()
+      distribution = distro.linux_distribution()
 
     if distribution[0] == '':
       distribution = advanced_check(distribution)
